@@ -14,17 +14,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false, length = 25)
     private String username;
 
+    @Column(nullable = false, length = 100)
     private String password;
 
     private String firstName;
 
     private String lastName;
 
-    private Boolean blocked;
-
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp registrationDate;
+
+    @Column(columnDefinition = "BIT(1) DEFAULT 0")
+    private Boolean blocked;
 
     @ManyToMany
     @JoinTable(name = "user_has_role",
