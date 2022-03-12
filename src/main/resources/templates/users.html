@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Users</title>
+</head>
+<body>
+    <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+    <h2>Users will appear here</h2>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out"/>
+    </form>
+</body>
+</html>

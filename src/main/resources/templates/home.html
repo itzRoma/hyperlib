@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Greetings</title>
+    <title>Home</title>
 </head>
 <body>
-    <h1 th:text="'Welcome to Hyperlib, ' + ${name} + '!'"></h1>
+    <h1>Click <a th:href="@{/users}">here</a> to see all users</h1>
 </body>
 </html>
