@@ -1,13 +1,31 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Users</title>
 </head>
 <body>
-    <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-    <h2>Users will appear here</h2>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out"/>
     </form>
+    <a th:href="@{/home}">Home</a>
+    <hr>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Roles</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td><span th:text="${user.id}">ID</span></td>
+                <td><span th:text="${user.username}">Username</span></td>
+                <td><span th:text="${user.roles}">Roles</span></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

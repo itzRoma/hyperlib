@@ -24,13 +24,13 @@ public class User {
 
     private String lastName;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = false)
     private Timestamp registrationDate;
 
-    @Column(columnDefinition = "BIT(1) DEFAULT 0")
+    @Column(nullable = false)
     private Boolean blocked;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_has_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
