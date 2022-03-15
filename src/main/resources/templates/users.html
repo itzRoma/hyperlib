@@ -5,7 +5,7 @@
 </head>
 <body>
     <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign Out"/>
+        <input type="submit" value="Logout"/>
     </form>
     <a th:href="@{/home}">Home</a>
     <hr>
@@ -21,9 +21,9 @@
 
         <tbody>
             <tr th:each="user : ${users}">
-                <td><span th:text="${user.id}">ID</span></td>
-                <td><span th:text="${user.username}">Username</span></td>
-                <td><span th:text="${user.roles}">Roles</span></td>
+                <td><a th:text="${user.id}"></a></td>
+                <td><a th:href="@{'/users/' + ${user.username}}" th:text="${user.username}"></a></td>
+                <td><a th:text="${user.roles}"></a></td>
             </tr>
         </tbody>
     </table>

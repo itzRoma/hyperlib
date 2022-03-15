@@ -1,9 +1,21 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
 <head>
     <title>Home</title>
 </head>
 <body>
-    <h1>Click <a th:href="@{/users}">here</a> to see all users</h1>
+    <div sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Logout"/>
+        </form>
+        <h2>Click <a th:href="@{/users}">here</a> to see all users</h2>
+    </div>
+
+    <div sec:authorize="isAnonymous()">
+        <a th:href="@{/login}">Login</a>
+        <a th:href="@{/registration}">Registration</a>
+    </div>
 </body>
 </html>
