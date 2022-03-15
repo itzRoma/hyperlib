@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <meta charset="UTF-8">
     <title th:text="${user.username}"></title>
 </head>
 <body>
@@ -10,10 +11,11 @@
     <a th:href="@{/home}">Home</a>
     <hr>
 
-    <div>First name : <a th:text="${user.firstName}"></a></div>
-    <div>Last name : <a th:text="${user.lastName}"></a></div>
-    <div>Username : <a th:text="${user.username}"></a></div>
-    <div>Roles : <a th:text="${user.roles}"></a></div>
-    <div>Registration date : <a th:text="${user.registrationDate}"></a></div>
+    <div>First name : <span th:text="${user.firstName}"></span></div>
+    <div>Last name : <span th:text="${user.lastName}"></span></div>
+    <div>Username : <span th:text="${user.username}"></span></div>
+    <div>Roles : <span th:text="${user.roles}"></span></div>
+    <div>Registration date : <span th:text="${user.registrationDate}"></span></div>
+    <div>Blocked : <span th:text="${user.blocked}"></span></div>
 </body>
 </html>

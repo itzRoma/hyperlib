@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Edit ' + ${user.username}"></title>
+</head>
+<body>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout"/>
+    </form>
+    <a th:href="@{/home}">Home</a>
+    <hr>
+
+    <form th:action="@{'/users/' + ${user.username}}" method="post">
+        <div>
+            <label for="firstName">
+                First name : <input type="text" name="firstName" id="firstName" th:value="${user.firstName}" readonly>
+            </label>
+        </div>
+
+        <div>
+            <label for="lastName">
+                Last name : <input type="text" name="lastName" id="lastName" th:value="${user.lastName}" readonly>
+            </label>
+        </div>
+
+        <div>
+            <label for="username">
+                Username : <input type="text" name="username" id="username" th:value="${user.username}" readonly>
+            </label>
+        </div>
+
+        <div>
+            Roles :
+            <div th:each="role : ${roles}">
+                <label th:for="${role}">
+                    <span th:if="${user.roles.contains(role)}">
+                        <input type="checkbox" th:id="${role}" th:name="${role}" checked>
+                    </span>
+                    <span th:unless="${user.roles.contains(role)}">
+                        <input type="checkbox" th:id="${role}" th:name="${role}">
+                    </span>
+                    <span th:text="${role}"></span>
+                </label>
+            </div>
+        </div>
+
+        <div>
+            Blocked :
+            <label for="blocked">
+                <span th:if="${user.blocked}">
+                    <input type="checkbox" name="blocked" id="blocked" checked>
+                </span>
+                <span th:unless="${user.blocked}">
+                    <input type="checkbox" name="blocked" id="blocked">
+                </span>
+            </label>
+        </div>
+
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</body>
+</html>

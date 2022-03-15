@@ -1,7 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
 </head>
 <body>
     <form th:action="@{/logout}" method="post">
@@ -10,21 +15,35 @@
     <a th:href="@{/home}">Home</a>
     <hr>
 
-    <table>
+    <table class="table table-striped">
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Roles</th>
-            </tr>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">First name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Username</th>
+            <th scope="col">Roles</th>
+            <th scope="col">Registration date</th>
+            <th scope="col">Blocked</th>
+            <th scope="col"></th>
+        </tr>
         </thead>
-
         <tbody>
-            <tr th:each="user : ${users}">
-                <td><a th:text="${user.id}"></a></td>
-                <td><a th:href="@{'/users/' + ${user.username}}" th:text="${user.username}"></a></td>
-                <td><a th:text="${user.roles}"></a></td>
-            </tr>
+        <tr th:each="user : ${users}">
+            <th scope="row"><span th:text="${user.id}"></span></th>
+            <td><span th:text="${user.firstName}"></span></td>
+            <td><span th:text="${user.lastName}"></span></td>
+            <td><a th:href="@{'/users/' + ${user.username}}" th:text="${user.username}"></a></td>
+            <td><span th:text="${user.roles}"></span></td>
+            <td><span th:text="${user.registrationDate}"></span></td>
+            <td><span th:text="${user.blocked}"></span></td>
+            <td th:if="${user.username != #authentication.name}">
+                <a th:href="@{'/users/' + ${user.username} + '?action=edit'}">Edit</a>
+            </td>
+            <td th:unless="${user.username != #authentication.name}">
+                <span>MYSELF</span>
+            </td>
+        </tr>
         </tbody>
     </table>
 </body>

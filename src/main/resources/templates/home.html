@@ -3,13 +3,16 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
     <div sec:authorize="isAuthenticated()">
+        <div>Welcome to HyperLib, <span sec:authentication="name"></span>!</div>
         <form th:action="@{/logout}" method="post">
             <input type="submit" value="Logout"/>
         </form>
+        <hr>
         <h2>Click <a th:href="@{/users}">here</a> to see all users</h2>
     </div>
 

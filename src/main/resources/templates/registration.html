@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Registration</title>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <hr>
 
 <div th:if="${message != null}">
-    <p th:text="${message}"></p>
+    <span th:text="${message}"></span>
 </div>
 
 <form th:action="@{/registration}" method="post">
