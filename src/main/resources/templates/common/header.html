@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HyperLib | Header</title>
+</head>
+
+<body>
+<header class="header" th:fragment="header">
+    <div class="logo-nav-container">
+        <div class="logo header-logo">
+            <img th:src="@{/img/logo.png}" alt="logo">
+        </div>
+        <div class="nav-panel">
+            <a th:href="@{/}" class="nav-link">Home</a>
+            <a th:href="@{/books}" class="nav-link">Books</a>
+            <a th:href="@{/movies}" class="nav-link">Movies</a>
+            <a th:href="@{/songs}" class="nav-link">Songs</a>
+
+            <!-- Only for admins-->
+            <a class="nav-link"
+               th:each="authority : ${#authentication.getAuthorities()}"
+               th:if="${authority.getAuthority().equals('ROLE_ADMIN')}"
+               th:href="@{/users}">Users</a>
+        </div>
+    </div>
+    <div class="nav-buttons" sec:authorize="isAnonymous()">
+        <a th:href="@{/registration}" class="button registration-profile-button">Register</a>
+        <a th:href="@{/login}" class="button">Login</a>
+    </div>
+    <div class="nav-buttons" sec:authorize="isAuthenticated()">
+        <a th:href="@{'/users/' + ${#authentication.name}}" th:text="${#authentication.name}" class="button registration-profile-button"></a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="button">Logout</button>
+        </form>
+    </div>
+</header>
+</body>
+</html>

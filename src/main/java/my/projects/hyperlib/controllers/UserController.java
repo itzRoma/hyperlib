@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public String findAll(Model model) {
         model.addAttribute("users", userService.findAll());
         return "users";
@@ -62,28 +62,43 @@ public class UserController {
     @PostMapping("/{username}")
     public String userEdit(
             @PathVariable String username,
+            @RequestParam(name = "blockUnblockUsername", required = false) String blockUnblockUsername,
+            @RequestParam(name = "deleteUsername", required = false) String deleteUsername,
             @RequestParam Map<String, String> form
     ) {
-        User userToEdit = userService.findByUsername(username);
-
-        Set<String> roles = roleService.findAll().stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet());
-
-        userToEdit.getRoles().clear();
-
-        for (String key : form.keySet()) {
-            if (roles.contains(key)) {
-                userToEdit.getRoles().add(roleService.findByName(key));
-            }
-            if (key.equals("blocked")) {
-                userToEdit.setBlocked(Boolean.TRUE);
+        if (blockUnblockUsername != null) {
+            User blockUnblockUser = userService.findByUsername(blockUnblockUsername);
+            if (blockUnblockUser.getBlocked()) {
+                blockUnblockUser.setBlocked(Boolean.FALSE);
             } else {
-                userToEdit.setBlocked(Boolean.FALSE);
+                blockUnblockUser.setBlocked(Boolean.TRUE);
             }
-        }
+            userService.save(blockUnblockUser);
+        } else if (deleteUsername != null) {
+            User userToDelete = userService.findByUsername(deleteUsername);
+            userService.delete(userToDelete);
+        } else {
+            User userToEdit = userService.findByUsername(username);
 
-        userService.save(userToEdit);
+            Set<String> roles = roleService.findAll().stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toSet());
+
+            userToEdit.getRoles().clear();
+
+            for (String key : form.keySet()) {
+                if (roles.contains(key)) {
+                    userToEdit.getRoles().add(roleService.findByName(key));
+                }
+                if (key.equals("blocked")) {
+                    userToEdit.setBlocked(Boolean.TRUE);
+                } else {
+                    userToEdit.setBlocked(Boolean.FALSE);
+                }
+            }
+
+            userService.save(userToEdit);
+        }
 
         return "redirect:/users";
     }

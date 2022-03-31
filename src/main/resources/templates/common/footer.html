@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+<footer class="footer" th:fragment="footer">
+    <div class="logo">
+        <img th:src="@{img/logo.png}" alt="logo">
+    </div>
+    <div class="title">
+        <a th:href="@{/}">HyperLib</a>
+    </div>
+    <div class="author">
+        <span>by Roman Bondarenko</span>
+    </div>
+</footer>
+</body>
+</html>

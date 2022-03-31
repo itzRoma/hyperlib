@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* VARIABLES AND SCROLL-BAR */
+
+:root {
+    --main-bg-color: #f5f5f5;
+    --main-color: #dd3838;
+    --main-hover-color: #992222;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--main-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--main-hover-color);
+}
+
+/* COMMON */
+
+* {
+    transition: .2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background-color: var(--main-bg-color);
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+button {
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.logo {
+    display: flex;
+}
+
+.logo img {
+    width: 55px;
+    height: auto;
+    align-self: center;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.action-button {
+    margin: 0 2px;
+    padding: 5px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CONTAINER */
+
+.container {
+    max-width: 87.5%;
+    min-height: 100vh;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+
+.header {
+    background-color: #ffffff;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 0 5px 5px var(--main-color);
+    padding: 20px 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-nav-container {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo {
+    margin-right: 40px;
+}
+
+.nav-link {
+    margin: 0 10px;
+    opacity: .55;
+}
+
+.nav-link:hover {
+    opacity: 1;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.button {
+    padding: 7px 25px;
+    border: 3px solid var(--main-color);
+    border-radius: 7px;
+    background-color: var(--main-color);
+    color: #ffffff;
+}
+
+.button:hover {
+    background-color: var(--main-hover-color);
+    border-color: var(--main-hover-color);
+    color: #ffffff;
+    transform: translateY(5px);
+}
+
+.registration-profile-button {
+    margin-right: 14px;
+    background-color: inherit;
+    color: var(--main-color);
+}
+
+/* FORM */
+
+.form {
+    padding: 100px;
+    background-color: #fff;
+    border-radius: 30px;
+    box-shadow: 0 0 20px var(--main-color);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.form-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.error-message {
+    margin: 5px;
+}
+
+.input-field {
+    padding: 10px;
+    border-radius: 7px;
+    margin: 5px;
+    font-size: 18px;
+}
+
+.role-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.role-group ul {
+    margin: 0;
+    list-style: none;
+}
+
+/* MAIN */
+
+.main {
+    padding: 20px 50px;
+    margin: 50px 0;
+}
+
+.main-centered {
+    margin: auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 7px 7px 0 0;
+    box-shadow: 0 0 5px var(--main-color);
+}
+
+.users-table thead tr {
+    font-size: 20px;
+    background-color: var(--main-color);
+    color: #ffffff;
+    text-align: left;
+}
+
+.users-table th,
+.users-table td {
+    padding: 10px;
+}
+
+.users-table tbody tr {
+    border-bottom: 1px solid var(--main-color);
+}
+
+.users-table tbody tr:last-of-type {
+    border-bottom: 3px solid var(--main-color);
+}
+
+.users-table tbody tr:hover {
+    background-color: #ffffff;
+}
+
+/* FOOTER */
+
+.footer {
+    background-color: #ffffff;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0 0 5px 5px var(--main-color);
+    padding: 20px 50px;
+    margin-top: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.title a {
+    font-size: 24px;
+}
+
+.author span {
+    font-size: 16px;
+    font-weight: 400;
+}

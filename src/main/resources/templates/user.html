@@ -2,20 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${user.username}"></title>
+    <title th:text="'HyperLib | ' + ${user.username}"></title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Logout"/>
-    </form>
-    <a th:href="@{/home}">Home</a>
-    <hr>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
 
-    <div>First name : <span th:text="${user.firstName}"></span></div>
-    <div>Last name : <span th:text="${user.lastName}"></span></div>
-    <div>Username : <span th:text="${user.username}"></span></div>
-    <div>Roles : <span th:text="${user.roles}"></span></div>
-    <div>Registration date : <span th:text="${user.registrationDate}"></span></div>
-    <div>Blocked : <span th:text="${user.blocked}"></span></div>
+    <main class="main">
+        <div>First name : <span th:text="${user.firstName}"></span></div>
+        <div>Last name : <span th:text="${user.lastName}"></span></div>
+        <div>Username : <span th:text="${user.username}"></span></div>
+        <div>Roles : <span th:text="${user.roles}"></span></div>
+        <div>Registration date : <span th:text="${user.registrationDate}"></span></div>
+        <div>Blocked : <span th:text="${user.blocked}"></span></div>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
 </body>
 </html>

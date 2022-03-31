@@ -2,39 +2,36 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title>HyperLib | Registration</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
 
-<div>Already have an account?</div>
-<div>Click <a th:href="@{/login}">here</a> to login</div>
-<a th:href="@{/home}">Home</a>
-<hr>
+    <main class="main main-centered">
+        <form th:action="@{/registration}" method="post" class="form">
+            <span class="form-title">Register an account</span>
 
-<div th:if="${message != null}">
-    <span th:text="${message}"></span>
+            <span class="error-message" th:text="${message}" th:if="${message != null}"></span>
+
+            <input type="text" class="input-field" name="firstName" placeholder="First Name" required autofocus>
+
+            <input type="text" class="input-field" name="lastName" placeholder="Last Name" required>
+
+            <input type="text" class="input-field" name="username" placeholder="Username" required>
+
+            <input type="password" class="input-field" name="password" placeholder="Password" required>
+
+            <p>Already have an account? <a th:href="@{/login}">Login</a></p>
+
+            <button type="submit" class="button">Register</button>
+        </form>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
 </div>
 
-<form th:action="@{/registration}" method="post">
-    <div>
-        <label for="firstName">First name : <input type="text" name="firstName" id="firstName"></label>
-    </div>
-
-    <div>
-        <label for="lastName">Last name : <input type="text" name="lastName" id="lastName"></label>
-    </div>
-
-    <div>
-        <label for="username">Username : <input type="text" name="username" id="username"></label>
-    </div>
-
-    <div>
-        <label for="password">Password : <input type="password" name="password" id="password"></label>
-    </div>
-
-    <div>
-        <button type="submit">Register</button>
-    </div>
-</form>
 </body>
 </html>

@@ -2,27 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>HyperLib | Login</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
 
-<div>Don't have an account?</div>
-<div>Click <a th:href="@{/registration}">here</a> to register</div>
-<a th:href="@{/home}">Home</a>
-<hr>
+    <main class="main main-centered">
+        <form th:action="@{/login}" method="post" class="form">
+            <span class="form-title">Login please</span>
 
-<form th:action="@{/login}" method="post">
-    <div>
-        <label for="username">Username : <input type="text" name="username" id="username"></label>
-    </div>
+            <input type="text" class="input-field" name="username" placeholder="Username" required autofocus>
 
-    <div>
-        <label for="password">Password : <input type="password" name="password" id="password"></label>
-    </div>
+            <input type="password" class="input-field" name="password" placeholder="Password" required>
 
-    <div>
-        <button type="submit">Login</button>
-    </div>
-</form>
+            <p>Do not have an account? <a th:href="@{/registration}">Register</a></p>
+
+            <button type="submit" class="button">Login</button>
+
+            <div th:if="${SPRING_SECURITY_LAST_EXCEPTION != null}">
+                <span th:text="${SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
+            </div>
+        </form>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
 </body>
 </html>

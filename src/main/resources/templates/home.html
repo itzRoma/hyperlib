@@ -1,24 +1,16 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>HyperLib | Home</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div sec:authorize="isAuthenticated()">
-        <div>Welcome to HyperLib, <span sec:authentication="name"></span>!</div>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Logout"/>
-        </form>
-        <hr>
-        <h2>Click <a th:href="@{/users}">here</a> to see all users</h2>
-    </div>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
 
-    <div sec:authorize="isAnonymous()">
-        <a th:href="@{/login}">Login</a>
-        <a th:href="@{/registration}">Registration</a>
-    </div>
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
 </body>
 </html>
