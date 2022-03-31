@@ -19,7 +19,7 @@
                 <th>Username</th>
                 <th>Roles</th>
                 <th>Registration Date</th>
-                <th>Blocked</th>
+                <th>Locked</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -32,8 +32,8 @@
                 <td><span th:text="${user.registrationDate}"></span></td>
 
                 <td>
-                    <img th:src="@{'/img/' + 'true' + '.png'}" alt="true" th:if="${user.blocked == true}">
-                    <img th:src="@{'/img/' + 'false' + '.png'}" alt="false" th:if="${user.blocked == false}">
+                    <img th:src="@{'/img/' + 'true' + '.png'}" alt="true" th:if="${user.getLocked == true}">
+                    <img th:src="@{'/img/' + 'false' + '.png'}" alt="false" th:if="${user.getLocked == false}">
                 </td>
 
                 <td th:if="${user.username != #authentication.name}">
@@ -43,12 +43,12 @@
                         </a>
 
                         <form th:action="@{'/users/' + ${user.username}}" method="post">
-                            <input type="hidden" name="blockUnblockUsername" th:value="${user.username}">
+                            <input type="hidden" name="lockUnlockUsername" th:value="${user.username}">
 
-                            <button type="submit" class="action-button" th:if="${user.blocked == false}">
+                            <button type="submit" class="action-button" th:if="${user.getLocked == false}">
                                 <img th:src="@{/img/lock.png}" alt="lock">
                             </button>
-                            <button type="submit" class="action-button" th:if="${user.blocked == true}">
+                            <button type="submit" class="action-button" th:if="${user.getLocked == true}">
                                 <img th:src="@{/img/unlock.png}" alt="unlock">
                             </button>
                         </form>
@@ -63,9 +63,7 @@
                     </div>
                 </td>
 
-                <td th:unless="${user.username != #authentication.name}">
-                    <span style="font-weight: 600">MYSELF</span>
-                </td>
+                <td th:unless="${user.username != #authentication.name}"></td>
             </tr>
             </tbody>
         </table>

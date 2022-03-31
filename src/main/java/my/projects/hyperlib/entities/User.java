@@ -28,7 +28,7 @@ public class User {
     private Timestamp registrationDate;
 
     @Column(nullable = false)
-    private Boolean blocked;
+    private Boolean locked;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_has_role",

@@ -62,18 +62,18 @@ public class UserController {
     @PostMapping("/{username}")
     public String userEdit(
             @PathVariable String username,
-            @RequestParam(name = "blockUnblockUsername", required = false) String blockUnblockUsername,
+            @RequestParam(name = "lockUnlockUsername", required = false) String lockUnlockUsername,
             @RequestParam(name = "deleteUsername", required = false) String deleteUsername,
             @RequestParam Map<String, String> form
     ) {
-        if (blockUnblockUsername != null) {
-            User blockUnblockUser = userService.findByUsername(blockUnblockUsername);
-            if (blockUnblockUser.getBlocked()) {
-                blockUnblockUser.setBlocked(Boolean.FALSE);
+        if (lockUnlockUsername != null) {
+            User lockUnlockUser = userService.findByUsername(lockUnlockUsername);
+            if (lockUnlockUser.getLocked()) {
+                lockUnlockUser.setLocked(Boolean.FALSE);
             } else {
-                blockUnblockUser.setBlocked(Boolean.TRUE);
+                lockUnlockUser.setLocked(Boolean.TRUE);
             }
-            userService.save(blockUnblockUser);
+            userService.save(lockUnlockUser);
         } else if (deleteUsername != null) {
             User userToDelete = userService.findByUsername(deleteUsername);
             userService.delete(userToDelete);
@@ -90,10 +90,10 @@ public class UserController {
                 if (roles.contains(key)) {
                     userToEdit.getRoles().add(roleService.findByName(key));
                 }
-                if (key.equals("blocked")) {
-                    userToEdit.setBlocked(Boolean.TRUE);
+                if (key.equals("locked")) {
+                    userToEdit.setLocked(Boolean.TRUE);
                 } else {
-                    userToEdit.setBlocked(Boolean.FALSE);
+                    userToEdit.setLocked(Boolean.FALSE);
                 }
             }
 

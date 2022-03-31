@@ -16,7 +16,7 @@
         <div>Username : <span th:text="${user.username}"></span></div>
         <div>Roles : <span th:text="${user.roles}"></span></div>
         <div>Registration date : <span th:text="${user.registrationDate}"></span></div>
-        <div>Blocked : <span th:text="${user.blocked}"></span></div>
+        <div>Locked : <span th:text="${user.getLocked}"></span></div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

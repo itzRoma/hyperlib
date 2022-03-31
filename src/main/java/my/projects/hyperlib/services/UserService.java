@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
                 userFromDB.getUsername(),
                 userFromDB.getPassword(),
                 true, true, true,
-                !userFromDB.getBlocked(),
+                !userFromDB.getLocked(),
                 mapRolesToAuthorities(userFromDB.getRoles())
         );
     }

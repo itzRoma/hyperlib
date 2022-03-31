@@ -52,7 +52,7 @@ public class RegistrationController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRegistrationDate(new Timestamp(new Date().getTime()));
-        user.setBlocked(Boolean.FALSE);
+        user.setLocked(Boolean.FALSE);
         user.setRoles(Collections.singleton(roleService.findByName("ROLE_USER")));
         userService.save(user);
 
