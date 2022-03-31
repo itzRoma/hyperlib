@@ -14,6 +14,8 @@
         <form th:action="@{/login}" method="post" class="form">
             <span class="form-title">Login please</span>
 
+            <span class="error-message" th:if="${error != null}" th:text="${error}"></span>
+
             <input type="text" class="input-field" name="username" placeholder="Username" required autofocus>
 
             <input type="password" class="input-field" name="password" placeholder="Password" required>
@@ -21,10 +23,6 @@
             <p>Do not have an account? <a th:href="@{/registration}">Register</a></p>
 
             <button type="submit" class="button">Login</button>
-
-            <div th:if="${SPRING_SECURITY_LAST_EXCEPTION != null}">
-                <span th:text="${SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
-            </div>
         </form>
     </main>
 
