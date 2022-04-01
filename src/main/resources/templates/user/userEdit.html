@@ -12,7 +12,7 @@
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{'/users/' + ${user.username}}" method="post" class="form">
+        <form th:action="@{'/users/' + ${user.username} + '/edit'}" method="post" class="form">
             <span class="form-title" th:text="'User ' + ${user.username} + ' editing'"></span>
 
             <input type="text" class="input-field" th:value="${user.firstName}" readonly>

@@ -7,6 +7,8 @@ import my.projects.hyperlib.services.RoleService;
 import my.projects.hyperlib.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserController {
     private UserService userService;
     private RoleService roleService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -32,11 +35,16 @@ public class UserController {
         this.roleService = roleService;
     }
 
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public String findAll(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "users";
+        return "user/users";
     }
 
     @GetMapping("/{username}")
@@ -52,58 +60,97 @@ public class UserController {
         }
         model.addAttribute("user", requestedUser);
 
-        if (checkIfUserIsAdmin(principal) && action.equals("edit")) {
+        if (checkIfUserIsAdmin(principal.getName()) && action.equals("edit")) {
             model.addAttribute("roles", roleService.findAll());
-            return "userEdit";
+            return "user/userEdit";
         }
-        return "user";
+
+        if (principal.getName().equals(username) && action.equals("profileEdit")) {
+            return "user/userProfileEdit";
+        }
+
+        return "user/user";
     }
 
-    @PostMapping("/{username}")
+    @PostMapping("/{username}/edit")
     public String userEdit(
             @PathVariable String username,
-            @RequestParam(name = "lockUnlockUsername", required = false) String lockUnlockUsername,
-            @RequestParam(name = "deleteUsername", required = false) String deleteUsername,
             @RequestParam Map<String, String> form
     ) {
-        if (lockUnlockUsername != null) {
-            User lockUnlockUser = userService.findByUsername(lockUnlockUsername);
-            if (lockUnlockUser.getLocked()) {
-                lockUnlockUser.setLocked(Boolean.FALSE);
-            } else {
-                lockUnlockUser.setLocked(Boolean.TRUE);
+        User userToEdit = userService.findByUsername(username);
+
+        Set<String> roles = roleService.findAll().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+
+        userToEdit.getRoles().clear();
+
+        for (String key : form.keySet()) {
+            if (roles.contains(key)) {
+                userToEdit.getRoles().add(roleService.findByName(key));
             }
-            userService.save(lockUnlockUser);
-        } else if (deleteUsername != null) {
-            User userToDelete = userService.findByUsername(deleteUsername);
-            userService.delete(userToDelete);
-        } else {
-            User userToEdit = userService.findByUsername(username);
-
-            Set<String> roles = roleService.findAll().stream()
-                    .map(Role::getName)
-                    .collect(Collectors.toSet());
-
-            userToEdit.getRoles().clear();
-
-            for (String key : form.keySet()) {
-                if (roles.contains(key)) {
-                    userToEdit.getRoles().add(roleService.findByName(key));
-                }
-                if (key.equals("locked")) {
-                    userToEdit.setLocked(Boolean.TRUE);
-                } else {
-                    userToEdit.setLocked(Boolean.FALSE);
-                }
-            }
-
-            userService.save(userToEdit);
         }
+        userService.save(userToEdit);
 
         return "redirect:/users";
     }
 
-    private boolean checkIfUserIsAdmin(Principal principal) {
-        return userService.findByUsername(principal.getName()).getRoles().contains(roleService.findByName("ROLE_ADMIN"));
+    @PostMapping("/{username}/profileEdit")
+    public String profileEdit(
+            @PathVariable String username,
+            @RequestParam Map<String, String> form,
+            Principal principal
+    ) {
+        User userToEdit = userService.findByUsername(username);
+
+        String newFirstName = form.get("firstName").trim();
+        String newLastName = form.get("lastName").trim();
+        String newUsername = form.get("username").trim();
+        String newPassword = form.get("password").trim();
+
+        if (!newFirstName.isEmpty()) {
+            userToEdit.setFirstName(newFirstName);
+        }
+        if (!newLastName.isEmpty()) {
+            userToEdit.setLastName(newLastName);
+        }
+        if (!newPassword.isEmpty()) {
+            userToEdit.setPassword(passwordEncoder.encode(newPassword));
+        }
+        if (!newUsername.isEmpty() && !newUsername.equals(username)) {
+            userToEdit.setUsername(newUsername);
+            userService.save(userToEdit);
+
+            SecurityContextHolder.clearContext();
+        }
+        userService.save(userToEdit);
+
+        return "redirect:/users/" + userToEdit.getUsername();
+    }
+
+    @PostMapping("/{username}/lockUnlock")
+    public String lockUnlock(@PathVariable String username) {
+        User lockUnlockUser = userService.findByUsername(username);
+
+        if (lockUnlockUser.getLocked()) {
+            lockUnlockUser.setLocked(Boolean.FALSE);
+        } else {
+            lockUnlockUser.setLocked(Boolean.TRUE);
+        }
+        userService.save(lockUnlockUser);
+
+        return "redirect:/users";
+    }
+
+    @PostMapping("/{username}/delete")
+    public String delete(@PathVariable String username) {
+        User userToDelete = userService.findByUsername(username);
+        userService.delete(userToDelete);
+
+        return "redirect:/users";
+    }
+
+    private boolean checkIfUserIsAdmin(String username) {
+        return userService.findByUsername(username).getRoles().contains(roleService.findByName("ROLE_ADMIN"));
     }
 }

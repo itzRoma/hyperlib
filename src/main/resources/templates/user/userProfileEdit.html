@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'HyperLib | ' + ${user.username}"></title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main main-centered">
+        <form th:action="@{'/users/' + ${user.username} + '/profileEdit'}" method="post" class="form">
+            <span class="form-title" th:text="${user.username} + ' profile editing'"></span>
+
+            <input type="text" name="firstName" class="input-field" placeholder="New First Name" th:value="${user.firstName}">
+
+            <input type="text" name="lastName" class="input-field" placeholder="New Last Name" th:value="${user.lastName}">
+
+            <input type="text" name="username" class="input-field" placeholder="New Username" th:value="${user.username}">
+
+            <input type="password" name="password" class="input-field" placeholder="New Password">
+
+            <p>Changed your mind? <a th:href="@{'/users/' + ${user.username}}">Return</a></p>
+
+            <button type="submit" class="button">Save</button>
+        </form>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+</body>
+</html>

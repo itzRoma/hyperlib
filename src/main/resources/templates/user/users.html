@@ -32,32 +32,30 @@
                 <td><span th:text="${user.registrationDate}"></span></td>
 
                 <td>
-                    <img th:src="@{'/img/' + 'true' + '.png'}" alt="true" th:if="${user.getLocked == true}">
-                    <img th:src="@{'/img/' + 'false' + '.png'}" alt="false" th:if="${user.getLocked == false}">
+                    <img th:src="@{'/img/common/' + 'true' + '.png'}" alt="true" th:if="${user.getLocked == true}">
+                    <img th:src="@{'/img/common/' + 'false' + '.png'}" alt="false" th:if="${user.getLocked == false}">
                 </td>
 
                 <td th:if="${user.username != #authentication.name}">
                     <div class="action-buttons">
                         <a th:href="@{'/users/' + ${user.username} + '?action=edit'}" class="action-button">
-                            <img th:src="@{/img/edit.png}" alt="edit">
+                            <img th:src="@{/img/common/edit.png}" alt="edit">
                         </a>
 
-                        <form th:action="@{'/users/' + ${user.username}}" method="post">
-                            <input type="hidden" name="lockUnlockUsername" th:value="${user.username}">
-
+                        <!-- LOCKING-UNLOCKING USER -->
+                        <form th:action="@{'/users/' + ${user.username} + '/lockUnlock'}" method="post">
                             <button type="submit" class="action-button" th:if="${user.getLocked == false}">
-                                <img th:src="@{/img/lock.png}" alt="lock">
+                                <img th:src="@{/img/common/lock.png}" alt="lock">
                             </button>
                             <button type="submit" class="action-button" th:if="${user.getLocked == true}">
-                                <img th:src="@{/img/unlock.png}" alt="unlock">
+                                <img th:src="@{/img/common/unlock.png}" alt="unlock">
                             </button>
                         </form>
 
-                        <form th:action="@{'/users/' + ${user.username}}" method="post">
-                            <input type="hidden" name="deleteUsername" th:value="${user.username}">
-
+                        <!-- DELETING USER -->
+                        <form th:action="@{'/users/' + ${user.username} + '/delete'}" method="post">
                             <button type="submit" class="action-button">
-                                <img th:src="@{/img/delete.png}" alt="delete">
+                                <img th:src="@{/img/common/delete.png}" alt="delete">
                             </button>
                         </form>
                     </div>

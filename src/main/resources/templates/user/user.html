@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'HyperLib | ' + ${user.username}"></title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main">
+        <div class="user-info">
+            <div class="user-credentials">
+                <img th:src="@{/img/user/defaultProfileImage.png}" alt="profileImage" class="profile-image">
+                <span th:text="${user.firstName} + ' ' + ${user.lastName}" class="full-name"></span>
+                <span th:text="${user.username}" class="username"></span>
+                <a th:if="${#authentication.name == user.username}" th:href="@{'/users/' + ${user.username} + '?action=profileEdit'}"
+                   class="button registration-profile-button edit-profile">Edit profile</a>
+            </div>
+            <div class="user-items">
+                <div class="user-books">Books</div>
+                <div class="user-movies">Movies</div>
+                <div class="user-songs">Songs</div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+</body>
+</html>

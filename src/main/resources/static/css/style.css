@@ -209,6 +209,8 @@ button {
     justify-content: center;
 }
 
+/* USERS TABLE */
+
 .users-table {
     width: 100%;
     border-collapse: collapse;
@@ -239,6 +241,46 @@ button {
 
 .users-table tbody tr:hover {
     background-color: #ffffff;
+}
+
+/* USER PROFILE */
+
+.user-info {
+    display: flex;
+}
+
+.user-items {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.user-credentials {
+    width: 30%;
+}
+
+.user-credentials span {
+    display: block;
+}
+
+.profile-image {
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+.full-name {
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.username {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.edit-profile {
+    display: inline-block;
 }
 
 /* FOOTER */
