@@ -1,4 +1,4 @@
-package my.projects.hyperlib.entities;
+package my.projects.hyperlib.entity;
 
 import lombok.Data;
 
@@ -23,6 +23,8 @@ public class User {
     private String firstName;
 
     private String lastName;
+
+    private String imageUrl;
 
     @Column(nullable = false)
     private Timestamp registrationDate;

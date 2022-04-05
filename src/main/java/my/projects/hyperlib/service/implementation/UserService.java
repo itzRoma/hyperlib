@@ -1,8 +1,10 @@
-package my.projects.hyperlib.services;
+package my.projects.hyperlib.service.implementation;
 
-import my.projects.hyperlib.entities.Role;
-import my.projects.hyperlib.entities.User;
-import my.projects.hyperlib.repositories.UserRepository;
+import my.projects.hyperlib.entity.Role;
+import my.projects.hyperlib.entity.User;
+import my.projects.hyperlib.exception.NotFoundException;
+import my.projects.hyperlib.repository.UserRepository;
+import my.projects.hyperlib.service.CommonServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,10 +14,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, CommonServiceContract<User> {
     private UserRepository userRepository;
 
     @Autowired
@@ -23,21 +26,7 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public Collection<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    public void save(User user) {
-        userRepository.save(user);
-    }
-
-    public void delete(User user) {
-        userRepository.delete(user);
-    }
+//    Method which Spring requires for authentication
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -59,5 +48,27 @@ public class UserService implements UserDetailsService {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
+    }
+
+//    Business logic
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void save(User entity) {
+        userRepository.save(entity);
+    }
+
+    @Override
+    public void delete(User entity) {
+        userRepository.delete(entity);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User '" + username + "' not found"));
     }
 }

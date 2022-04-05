@@ -1,6 +1,6 @@
-package my.projects.hyperlib.configs;
+package my.projects.hyperlib.config;
 
-import my.projects.hyperlib.services.UserService;
+import my.projects.hyperlib.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;

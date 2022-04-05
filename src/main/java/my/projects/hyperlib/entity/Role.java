@@ -1,4 +1,4 @@
-package my.projects.hyperlib.entities;
+package my.projects.hyperlib.entity;
 
 import lombok.Data;
 

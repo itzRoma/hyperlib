@@ -1,6 +1,6 @@
-package my.projects.hyperlib.repositories;
+package my.projects.hyperlib.repository;
 
-import my.projects.hyperlib.entities.Role;
+import my.projects.hyperlib.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

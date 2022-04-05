@@ -1,4 +1,4 @@
-package my.projects.hyperlib.configs;
+package my.projects.hyperlib.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

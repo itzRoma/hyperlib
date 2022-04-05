@@ -1,4 +1,4 @@
-package my.projects.hyperlib.controllers;
+package my.projects.hyperlib.controller;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;

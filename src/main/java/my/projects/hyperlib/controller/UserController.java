@@ -1,10 +1,9 @@
-package my.projects.hyperlib.controllers;
+package my.projects.hyperlib.controller;
 
-import my.projects.hyperlib.entities.Role;
-import my.projects.hyperlib.entities.User;
-import my.projects.hyperlib.exceptions.NotFoundException;
-import my.projects.hyperlib.services.RoleService;
-import my.projects.hyperlib.services.UserService;
+import my.projects.hyperlib.entity.Role;
+import my.projects.hyperlib.entity.User;
+import my.projects.hyperlib.service.implementation.RoleService;
+import my.projects.hyperlib.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,12 +54,10 @@ public class UserController {
             Model model
     ) {
         User requestedUser = userService.findByUsername(username);
-        if (requestedUser == null) {
-            throw new NotFoundException("user '" + username + "' not found");
-        }
+
         model.addAttribute("user", requestedUser);
 
-        if (checkIfUserIsAdmin(principal.getName()) && action.equals("edit")) {
+        if (checkIfCurrentUserIsAdmin(principal.getName()) && action.equals("edit")) {
             model.addAttribute("roles", roleService.findAll());
             return "user/userEdit";
         }
@@ -73,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping("/{username}/edit")
-    public String userEdit(
+    public String edit(
             @PathVariable String username,
             @RequestParam Map<String, String> form
     ) {
@@ -98,8 +95,7 @@ public class UserController {
     @PostMapping("/{username}/profileEdit")
     public String profileEdit(
             @PathVariable String username,
-            @RequestParam Map<String, String> form,
-            Principal principal
+            @RequestParam Map<String, String> form
     ) {
         User userToEdit = userService.findByUsername(username);
 
@@ -117,13 +113,14 @@ public class UserController {
         if (!newPassword.isEmpty()) {
             userToEdit.setPassword(passwordEncoder.encode(newPassword));
         }
+        userService.save(userToEdit);
+
         if (!newUsername.isEmpty() && !newUsername.equals(username)) {
             userToEdit.setUsername(newUsername);
             userService.save(userToEdit);
 
             SecurityContextHolder.clearContext();
         }
-        userService.save(userToEdit);
 
         return "redirect:/users/" + userToEdit.getUsername();
     }
@@ -144,13 +141,11 @@ public class UserController {
 
     @PostMapping("/{username}/delete")
     public String delete(@PathVariable String username) {
-        User userToDelete = userService.findByUsername(username);
-        userService.delete(userToDelete);
-
+        userService.delete(userService.findByUsername(username));
         return "redirect:/users";
     }
 
-    private boolean checkIfUserIsAdmin(String username) {
+    private boolean checkIfCurrentUserIsAdmin(String username) {
         return userService.findByUsername(username).getRoles().contains(roleService.findByName("ROLE_ADMIN"));
     }
 }

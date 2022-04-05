@@ -1,8 +1,9 @@
-package my.projects.hyperlib.controllers;
+package my.projects.hyperlib.controller;
 
-import my.projects.hyperlib.entities.User;
-import my.projects.hyperlib.services.RoleService;
-import my.projects.hyperlib.services.UserService;
+import my.projects.hyperlib.entity.User;
+import my.projects.hyperlib.exception.NotFoundException;
+import my.projects.hyperlib.service.implementation.RoleService;
+import my.projects.hyperlib.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -43,19 +44,20 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String addNewUser(User user, Model model) {
-        User userFromDb = userService.findByUsername(user.getUsername());
-        if (userFromDb != null) {
-            model.addAttribute("message", "User with this username is already exists!");
+    public String registerNewUser(User user, Model model) {
+        try {
+            User userFromDb = userService.findByUsername(user.getUsername());
+            model.addAttribute("message", "User '" + userFromDb.getUsername() + "' is already exists");
             return "registration";
+        } catch (NotFoundException ex) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setImageUrl("/img/user/defaultProfileImage.png");
+            user.setRegistrationDate(new Timestamp(new Date().getTime()));
+            user.setLocked(Boolean.FALSE);
+            user.setRoles(Collections.singleton(roleService.findByName("ROLE_USER")));
+            userService.save(user);
+
+            return "redirect:/login";
         }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRegistrationDate(new Timestamp(new Date().getTime()));
-        user.setLocked(Boolean.FALSE);
-        user.setRoles(Collections.singleton(roleService.findByName("ROLE_USER")));
-        userService.save(user);
-
-        return "redirect:/login";
     }
 }

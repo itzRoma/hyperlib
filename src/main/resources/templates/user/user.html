@@ -13,7 +13,7 @@
     <main class="main">
         <div class="user-info">
             <div class="user-credentials">
-                <img th:src="@{/img/user/defaultProfileImage.png}" alt="profileImage" class="profile-image">
+                <img th:src="@{${user.imageUrl}}" alt="profileImage" class="profile-image">
                 <span th:text="${user.firstName} + ' ' + ${user.lastName}" class="full-name"></span>
                 <span th:text="${user.username}" class="username"></span>
                 <a th:if="${#authentication.name == user.username}" th:href="@{'/users/' + ${user.username} + '?action=profileEdit'}"
