@@ -113,16 +113,13 @@ public class UserController {
     ) {
         if (
                 bindingResult.hasFieldErrors("firstName") ||
-                bindingResult.hasFieldErrors("lastName") ||
-                bindingResult.hasFieldErrors("username") ||
-                !newPassword.isEmpty()
+                        bindingResult.hasFieldErrors("lastName") ||
+                        bindingResult.hasFieldErrors("username") ||
+                        checkIfPasswordIsIncorrect(newPassword)
         ) {
-            String passwordError = null;
-            if (newPassword.length() < 8 || newPassword.length() > 255) {
-                passwordError = "Password should be 8 or more characters long!";
+            if (checkIfPasswordIsIncorrect(newPassword)) {
+                model.addAttribute("passwordError", "Password should be 8 or more characters long!");
             }
-            model.addAttribute("passwordError", passwordError);
-
             return "user/userProfileEdit";
         }
 
@@ -131,11 +128,11 @@ public class UserController {
         userToEdit.setFirstName(user.getFirstName());
         userToEdit.setLastName(user.getLastName());
 
-        if (!newPassword.equals("")) {
+        if (!newPassword.isEmpty()) {
             userToEdit.setPassword(passwordEncoder.encode(newPassword));
         }
 
-        if (!userToEdit.getUsername().equals(username)) {
+        if (!userToEdit.getUsername().equals(user.getUsername())) {
             userToEdit.setUsername(user.getUsername());
             SecurityContextHolder.clearContext();
         }
@@ -163,5 +160,10 @@ public class UserController {
     public String delete(@PathVariable String username) {
         userService.delete(userService.findByUsername(username));
         return "redirect:/users";
+    }
+
+    private boolean checkIfPasswordIsIncorrect(String password) {
+        String trimmedPassword = password.trim();
+        return !trimmedPassword.isEmpty() && (trimmedPassword.length() < 8 || trimmedPassword.length() > 255);
     }
 }
