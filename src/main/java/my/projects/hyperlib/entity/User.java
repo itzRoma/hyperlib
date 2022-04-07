@@ -1,35 +1,48 @@
 package my.projects.hyperlib.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Collection;
 
-@Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 25)
+    @NotEmpty(message = "Username cannot be empty!")
+    @Size(min = 3, max = 255, message = "Username is too short!")
+    @Column(unique = true)
     private String username;
 
-    @Column(nullable = false, length = 100)
+    @NotEmpty(message = "Password cannot be empty!")
+    @Size(min = 8, max = 255, message = "Password should be 8 or more characters long!")
     private String password;
 
+    @NotEmpty(message = "Firstname cannot be empty!")
+    @Size(min = 1, max = 255, message = "Firstname should be 1 or more characters long!")
     private String firstName;
 
+    @NotEmpty(message = "Lastname cannot be empty!")
+    @Size(min = 1, max = 255, message = "Lastname should be 1 or more characters long!")
     private String lastName;
 
     private String imageUrl;
 
-    @Column(nullable = false)
     private Timestamp registrationDate;
 
-    @Column(nullable = false)
     private Boolean locked;
 
     @ManyToMany(fetch = FetchType.EAGER)

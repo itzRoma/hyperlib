@@ -10,8 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
@@ -47,26 +49,30 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public String findOne(
-            @PathVariable String username,
-            @RequestParam(name = "action", required = false, defaultValue = "view") String action,
-            Principal principal,
-            Model model
-    ) {
-        User requestedUser = userService.findByUsername(username);
+    public String findOne(@PathVariable String username, Model model) {
+        User user = userService.findByUsername(username);
+        model.addAttribute("user", user);
+        return "user/user";
+    }
 
-        model.addAttribute("user", requestedUser);
+    @GetMapping("/{username}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String showUserEditForm(@PathVariable String username, Model model) {
+        User user = userService.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roleService.findAll());
+        return "user/userEdit";
+    }
 
-        if (checkIfCurrentUserIsAdmin(principal.getName()) && action.equals("edit")) {
-            model.addAttribute("roles", roleService.findAll());
-            return "user/userEdit";
-        }
-
-        if (principal.getName().equals(username) && action.equals("profileEdit")) {
+    @GetMapping("/{username}/profileEdit")
+    public String showProfileEditForm(@PathVariable String username, Principal principal, Model model) {
+        if (principal.getName().equals(username)) {
+            User user = userService.findByUsername(username);
+            model.addAttribute("user", user);
             return "user/userProfileEdit";
         }
 
-        return "user/user";
+        return "redirect:/users";
     }
 
     @PostMapping("/{username}/edit")
@@ -87,6 +93,11 @@ public class UserController {
                 userToEdit.getRoles().add(roleService.findByName(key));
             }
         }
+
+        if (userToEdit.getRoles().isEmpty()) {
+            userToEdit.getRoles().add(roleService.findByName("ROLE_USER"));
+        }
+
         userService.save(userToEdit);
 
         return "redirect:/users";
@@ -95,32 +106,41 @@ public class UserController {
     @PostMapping("/{username}/profileEdit")
     public String profileEdit(
             @PathVariable String username,
-            @RequestParam Map<String, String> form
+            @ModelAttribute("user") @Valid User user,
+            BindingResult bindingResult,
+            @RequestParam(name = "newPassword", required = false) String newPassword,
+            Model model
     ) {
+        if (
+                bindingResult.hasFieldErrors("firstName") ||
+                bindingResult.hasFieldErrors("lastName") ||
+                bindingResult.hasFieldErrors("username") ||
+                !newPassword.isEmpty()
+        ) {
+            String passwordError = null;
+            if (newPassword.length() < 8 || newPassword.length() > 255) {
+                passwordError = "Password should be 8 or more characters long!";
+            }
+            model.addAttribute("passwordError", passwordError);
+
+            return "user/userProfileEdit";
+        }
+
         User userToEdit = userService.findByUsername(username);
 
-        String newFirstName = form.get("firstName").trim();
-        String newLastName = form.get("lastName").trim();
-        String newUsername = form.get("username").trim();
-        String newPassword = form.get("password").trim();
+        userToEdit.setFirstName(user.getFirstName());
+        userToEdit.setLastName(user.getLastName());
 
-        if (!newFirstName.isEmpty()) {
-            userToEdit.setFirstName(newFirstName);
-        }
-        if (!newLastName.isEmpty()) {
-            userToEdit.setLastName(newLastName);
-        }
-        if (!newPassword.isEmpty()) {
+        if (!newPassword.equals("")) {
             userToEdit.setPassword(passwordEncoder.encode(newPassword));
         }
-        userService.save(userToEdit);
 
-        if (!newUsername.isEmpty() && !newUsername.equals(username)) {
-            userToEdit.setUsername(newUsername);
-            userService.save(userToEdit);
-
+        if (!userToEdit.getUsername().equals(username)) {
+            userToEdit.setUsername(user.getUsername());
             SecurityContextHolder.clearContext();
         }
+
+        userService.save(userToEdit);
 
         return "redirect:/users/" + userToEdit.getUsername();
     }
@@ -143,9 +163,5 @@ public class UserController {
     public String delete(@PathVariable String username) {
         userService.delete(userService.findByUsername(username));
         return "redirect:/users";
-    }
-
-    private boolean checkIfCurrentUserIsAdmin(String username) {
-        return userService.findByUsername(username).getRoles().contains(roleService.findByName("ROLE_ADMIN"));
     }
 }

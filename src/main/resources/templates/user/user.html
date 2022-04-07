@@ -16,7 +16,7 @@
                 <img th:src="@{${user.imageUrl}}" alt="profileImage" class="profile-image">
                 <span th:text="${user.firstName} + ' ' + ${user.lastName}" class="full-name"></span>
                 <span th:text="${user.username}" class="username"></span>
-                <a th:if="${#authentication.name == user.username}" th:href="@{'/users/' + ${user.username} + '?action=profileEdit'}"
+                <a th:if="${#authentication.name == user.username}" th:href="@{'/users/' + ${user.username} + '/profileEdit'}"
                    class="button registration-profile-button edit-profile">Edit profile</a>
             </div>
             <div class="user-items">

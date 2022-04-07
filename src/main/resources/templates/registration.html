@@ -11,18 +11,22 @@
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{/registration}" method="post" class="form">
+        <form th:action="@{/registration}" method="post" th:object="${newUser}" class="form">
             <span class="form-title">Register an account</span>
 
-            <span class="error-message" th:text="${message}" th:if="${message != null}"></span>
+            <span class="error-message" th:if="${error != null}" th:text="${error}">Error message</span>
 
-            <input type="text" class="input-field" name="firstName" placeholder="First Name" required autofocus>
+            <input type="text" class="input-field" th:field="*{firstName}" placeholder="First Name" autofocus>
+            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Firstname error</span>
 
-            <input type="text" class="input-field" name="lastName" placeholder="Last Name" required>
+            <input type="text" class="input-field" th:field="*{lastName}" placeholder="Last Name">
+            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname error</span>
 
-            <input type="text" class="input-field" name="username" placeholder="Username" required>
+            <input type="text" class="input-field" th:field="*{username}" placeholder="Username">
+            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
 
-            <input type="password" class="input-field" name="password" placeholder="Password" required>
+            <input type="password" class="input-field" th:field="*{password}" placeholder="Password">
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
 
             <p>Already have an account? <a th:href="@{/login}">Login</a></p>
 

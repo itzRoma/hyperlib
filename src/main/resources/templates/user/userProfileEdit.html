@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'HyperLib | ' + ${user.username}"></title>
+    <title>HyperLib | User</title>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -11,16 +11,20 @@
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{'/users/' + ${user.username} + '/profileEdit'}" method="post" class="form">
-            <span class="form-title" th:text="${user.username} + ' profile editing'"></span>
+        <form th:action="@{'/users/' + ${user.username} + '/profileEdit'}" method="post" th:object="${user}" class="form">
+            <span class="form-title">Profile editing</span>
 
-            <input type="text" name="firstName" class="input-field" placeholder="New First Name" th:value="${user.firstName}">
+            <input type="text" class="input-field" th:field="*{firstName}" placeholder="New First Name">
+            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Firstname error</span>
 
-            <input type="text" name="lastName" class="input-field" placeholder="New Last Name" th:value="${user.lastName}">
+            <input type="text" class="input-field" th:field="*{lastName}" placeholder="New Last Name">
+            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname error</span>
 
-            <input type="text" name="username" class="input-field" placeholder="New Username" th:value="${user.username}">
+            <input type="text" class="input-field" th:field="*{username}" placeholder="New Username">
+            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
 
-            <input type="password" name="password" class="input-field" placeholder="New Password">
+            <input type="password" class="input-field" name="newPassword" placeholder="New Password">
+            <span th:if="${passwordError != null}" th:text="${passwordError}">Password error</span>
 
             <p>Changed your mind? <a th:href="@{'/users/' + ${user.username}}">Return</a></p>
 

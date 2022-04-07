@@ -38,7 +38,7 @@
 
                 <td th:if="${user.username != #authentication.name}">
                     <div class="action-buttons">
-                        <a th:href="@{'/users/' + ${user.username} + '?action=edit'}" class="action-button">
+                        <a th:href="@{'/users/' + ${user.username} + '/edit'}" class="action-button">
                             <img th:src="@{/img/common/edit.png}" alt="edit">
                         </a>
 

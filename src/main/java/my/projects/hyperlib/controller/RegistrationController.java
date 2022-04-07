@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
@@ -39,23 +42,31 @@ public class RegistrationController {
     }
 
     @GetMapping
-    public String showRegistrationForm() {
+    public String showRegistrationForm(@ModelAttribute("newUser") User newUser) {
         return "registration";
     }
 
     @PostMapping
-    public String registerNewUser(User user, Model model) {
+    public String registerNewUser(
+            @ModelAttribute("newUser") @Valid User newUser,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+
         try {
-            User userFromDb = userService.findByUsername(user.getUsername());
-            model.addAttribute("message", "User '" + userFromDb.getUsername() + "' is already exists");
+            User userFromDb = userService.findByUsername(newUser.getUsername());
+            model.addAttribute("error", "User '" + userFromDb.getUsername() + "' is already exists!");
             return "registration";
         } catch (NotFoundException ex) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setImageUrl("/img/user/defaultProfileImage.png");
-            user.setRegistrationDate(new Timestamp(new Date().getTime()));
-            user.setLocked(Boolean.FALSE);
-            user.setRoles(Collections.singleton(roleService.findByName("ROLE_USER")));
-            userService.save(user);
+            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+            newUser.setImageUrl("/img/user/defaultProfileImage.png");
+            newUser.setRegistrationDate(new Timestamp(new Date().getTime()));
+            newUser.setLocked(Boolean.FALSE);
+            newUser.setRoles(Collections.singleton(roleService.findByName("ROLE_USER")));
+            userService.save(newUser);
 
             return "redirect:/login";
         }
