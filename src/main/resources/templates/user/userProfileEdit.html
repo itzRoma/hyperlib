@@ -20,7 +20,7 @@
             <input type="text" class="input-field" th:field="*{lastName}" placeholder="New Last Name">
             <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname error</span>
 
-            <input type="text" class="input-field" th:field="*{username}" placeholder="New Username">
+            <input type="text" class="input-field" name="newUsername" th:field="*{username}" placeholder="New Username">
             <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
 
             <input type="password" class="input-field" name="newPassword" placeholder="New Password">

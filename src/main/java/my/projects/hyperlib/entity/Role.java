@@ -1,27 +1,17 @@
 package my.projects.hyperlib.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-import javax.persistence.*;
+public enum Role {
+    ADMIN("ROLE_ADMIN"),
+    LIBRARIAN("ROLE_LIBRARIAN"),
+    USER("ROLE_USER");
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "role")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Getter
+    private final String name;
 
-    @Column(unique = true, nullable = false)
-    private String name;
-
-    @Override
-    public String toString() {
-        return name;
+    Role(String name) {
+        this.name = name;
     }
 }
 

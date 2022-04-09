@@ -1,51 +1,61 @@
 package my.projects.hyperlib.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Username cannot be empty!")
-    @Size(min = 3, max = 255, message = "Username is too short!")
     @Column(unique = true)
+    @Size(min = 4, max = 255, message = "Username should be 4 or more characters long!")
     private String username;
 
-    @NotEmpty(message = "Password cannot be empty!")
     @Size(min = 8, max = 255, message = "Password should be 8 or more characters long!")
     private String password;
 
     @NotEmpty(message = "Firstname cannot be empty!")
-    @Size(min = 1, max = 255, message = "Firstname should be 1 or more characters long!")
     private String firstName;
 
     @NotEmpty(message = "Lastname cannot be empty!")
-    @Size(min = 1, max = 255, message = "Lastname should be 1 or more characters long!")
     private String lastName;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date registrationDate;
 
     private String imageUrl;
 
-    private Timestamp registrationDate;
-
     private Boolean locked;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_has_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "users_roles", joinColumns = @JoinColumn(name = "users_id"))
+    private Set<Role> roles;
+
+    public User(String username, String password, String firstName, String lastName) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        imageUrl = "/img/common/defaultProfileImage.png";
+        locked = false;
+        roles = Collections.singleton(Role.USER);
+    }
 }

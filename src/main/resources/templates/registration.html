@@ -25,7 +25,7 @@
             <input type="text" class="input-field" th:field="*{username}" placeholder="Username">
             <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
 
-            <input type="password" class="input-field" th:field="*{password}" placeholder="Password">
+            <input type="password" class="input-field" name="password" th:field="*{password}" placeholder="Password">
             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
 
             <p>Already have an account? <a th:href="@{/login}">Login</a></p>

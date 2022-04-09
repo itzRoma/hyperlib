@@ -2,7 +2,7 @@ package my.projects.hyperlib.controller;
 
 import my.projects.hyperlib.entity.Role;
 import my.projects.hyperlib.entity.User;
-import my.projects.hyperlib.service.implementation.RoleService;
+import my.projects.hyperlib.exception.NotFoundException;
 import my.projects.hyperlib.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,25 +15,20 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
     private UserService userService;
-    private RoleService roleService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
     }
 
     @Autowired
@@ -60,7 +55,7 @@ public class UserController {
     public String showUserEditForm(@PathVariable String username, Model model) {
         User user = userService.findByUsername(username);
         model.addAttribute("user", user);
-        model.addAttribute("roles", roleService.findAll());
+        model.addAttribute("roles", Role.values());
         return "user/userEdit";
     }
 
@@ -82,20 +77,20 @@ public class UserController {
     ) {
         User userToEdit = userService.findByUsername(username);
 
-        Set<String> roles = roleService.findAll().stream()
-                .map(Role::getName)
+        Collection<String> roles = Stream.of(Role.values())
+                .map(Role::name)
                 .collect(Collectors.toSet());
 
         userToEdit.getRoles().clear();
 
         for (String key : form.keySet()) {
             if (roles.contains(key)) {
-                userToEdit.getRoles().add(roleService.findByName(key));
+                userToEdit.getRoles().add(Role.valueOf(key));
             }
         }
 
         if (userToEdit.getRoles().isEmpty()) {
-            userToEdit.getRoles().add(roleService.findByName("ROLE_USER"));
+            userToEdit.getRoles().add(Role.USER);
         }
 
         userService.save(userToEdit);
