@@ -42,7 +42,7 @@ public class User {
     private Boolean locked;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "users_roles", joinColumns = @JoinColumn(name = "users_id"))
+    @CollectionTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"))
     private Set<Role> roles;
 
     public User(String username, String password, String firstName, String lastName) {

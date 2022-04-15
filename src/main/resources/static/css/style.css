@@ -184,13 +184,13 @@ button {
     font-size: 18px;
 }
 
-.role-group {
+.checkbox-group {
     display: flex;
     align-items: center;
     justify-content: space-around;
 }
 
-.role-group ul {
+.checkbox-group ul {
     margin: 0;
     list-style: none;
 }
@@ -209,9 +209,9 @@ button {
     justify-content: center;
 }
 
-/* USERS TABLE */
+/* TABLE */
 
-.users-table {
+.table {
     width: 100%;
     border-collapse: collapse;
     overflow: hidden;
@@ -219,28 +219,33 @@ button {
     box-shadow: 0 0 5px var(--main-color);
 }
 
-.users-table thead tr {
+.table thead tr {
     font-size: 20px;
     background-color: var(--main-color);
     color: #ffffff;
     text-align: left;
 }
 
-.users-table th,
-.users-table td {
+.table th,
+.table td {
     padding: 10px;
 }
 
-.users-table tbody tr {
+.table tbody tr {
     border-bottom: 1px solid var(--main-color);
 }
 
-.users-table tbody tr:last-of-type {
+.table tbody tr:last-of-type {
     border-bottom: 3px solid var(--main-color);
 }
 
-.users-table tbody tr:hover {
+.table tbody tr:hover {
     background-color: #ffffff;
+}
+
+.create-category-button {
+    display: flex;
+    justify-content: flex-end;
 }
 
 /* USER PROFILE */

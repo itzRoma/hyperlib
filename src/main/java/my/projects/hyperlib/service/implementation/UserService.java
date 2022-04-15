@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,5 +70,9 @@ public class UserService implements UserDetailsService, CommonServiceContract<Us
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException(String.format("User '%s' not found!", username)));
+    }
+
+    public List<User> findByRole(Role role) {
+        return new ArrayList<>(userRepository.findByRole(role));
     }
 }

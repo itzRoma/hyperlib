@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HyperLib | Categories</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main">
+        <div class="create-category-button">
+            <a th:href="@{/categories/create}" class="button" style="margin-bottom: 20px">Create a category</a>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Item types</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td><span th:text="${category.id}" style="font-weight: 600"></span></td>
+                <td><span th:text="${category.name}"></span></td>
+                <td><span th:text="${category.itemTypes}"></span></td>
+
+                <td>
+                    <div class="action-buttons">
+                        <a th:href="@{'/categories/' + ${category.name} + '/edit'}" class="action-button">
+                            <img th:src="@{/img/common/edit.png}" alt="edit">
+                        </a>
+
+                        <!-- DELETING CATEGORY -->
+                        <form th:action="@{'/categories/' + ${category.name} + '/delete'}" method="post">
+                            <button type="submit" class="action-button">
+                                <img th:src="@{/img/common/delete.png}" alt="delete">
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+</body>
+</html>

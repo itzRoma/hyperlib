@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,7 +57,7 @@ public class UserController {
     public String showUserEditForm(@PathVariable String username, Model model) {
         User user = userService.findByUsername(username);
         model.addAttribute("user", user);
-        model.addAttribute("roles", Role.values());
+        model.addAttribute("roles", Arrays.asList(Role.ADMIN, Role.LIBRARIAN));
         return "user/userEdit";
     }
 
@@ -82,15 +84,12 @@ public class UserController {
                 .collect(Collectors.toSet());
 
         userToEdit.getRoles().clear();
+        userToEdit.getRoles().add(Role.USER);
 
         for (String key : form.keySet()) {
             if (roles.contains(key)) {
                 userToEdit.getRoles().add(Role.valueOf(key));
             }
-        }
-
-        if (userToEdit.getRoles().isEmpty()) {
-            userToEdit.getRoles().add(Role.USER);
         }
 
         userService.save(userToEdit);

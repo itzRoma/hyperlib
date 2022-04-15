@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                     .antMatchers("/", "/registration").permitAll()
                     .antMatchers("/books", "/movies", "/songs").permitAll()
+                    .antMatchers("/categories/**").hasRole("LIBRARIAN")
                     .antMatchers("/css/**", "/img/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
