@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collections;
@@ -21,16 +22,18 @@ public class User {
     private Long id;
 
     @Column(unique = true)
+    @NotBlank(message = "Username cannot contain spaces!")
     @Size(min = 4, max = 255, message = "Username should be 4 or more characters long!")
     private String username;
 
+    @NotBlank(message = "Password cannot contain spaces!")
     @Size(min = 8, max = 255, message = "Password should be 8 or more characters long!")
     private String password;
 
-    @NotEmpty(message = "Firstname cannot be empty!")
+    @NotBlank(message = "Firstname cannot be empty!")
     private String firstName;
 
-    @NotEmpty(message = "Lastname cannot be empty!")
+    @NotBlank(message = "Lastname cannot be empty!")
     private String lastName;
 
     @CreationTimestamp

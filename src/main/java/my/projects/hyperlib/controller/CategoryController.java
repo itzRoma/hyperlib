@@ -41,31 +41,13 @@ public class CategoryController {
     public String createCategory(
             @ModelAttribute("newCategory") @Valid Category newCategory,
             BindingResult bindingResult,
-            @RequestParam Map<String, String> form,
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            return "category/categoryCreatingForm";
-        }
-
-        Set<String> itemTypes = Stream.of(ItemType.values())
-                .map(ItemType::name)
-                .collect(Collectors.toSet());
-
-        for (String key : form.keySet()) {
-            if (itemTypes.contains(key)) {
-                newCategory.getItemTypes().add(ItemType.valueOf(key));
-            }
-        }
-
-        if (newCategory.getItemTypes().isEmpty()) {
-            model.addAttribute("error", "Item types were not specified!");
             model.addAttribute("itemTypes", ItemType.values());
             return "category/categoryCreatingForm";
         }
-
         categoryService.save(newCategory);
-
         return "redirect:/categories";
     }
 }

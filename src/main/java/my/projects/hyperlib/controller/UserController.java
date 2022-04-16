@@ -2,7 +2,6 @@ package my.projects.hyperlib.controller;
 
 import my.projects.hyperlib.entity.Role;
 import my.projects.hyperlib.entity.User;
-import my.projects.hyperlib.exception.NotFoundException;
 import my.projects.hyperlib.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +16,6 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,7 +66,6 @@ public class UserController {
             model.addAttribute("user", user);
             return "user/userProfileEdit";
         }
-
         return "redirect:/users";
     }
 
