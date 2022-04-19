@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HyperLib | Category</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main main-centered">
+        <form th:action="@{'/categories/' + ${editedCategory.name} + '/edit'}" method="post" th:object="${editedCategory}" class="form">
+            <span class="form-title">Create a category</span>
+
+            <input type="text" class="input-field" th:field="*{name}" placeholder="Name" autofocus>
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</span>
+            <span th:if="${nameError}" th:text="${nameError}">Name error</span>
+
+            <label>Item types:
+                <input type="checkbox"
+                       th:each="itemType : ${itemTypes}"
+                       th:text="${itemType.name()}"
+                       th:value="${itemType.name()}"
+                       th:field="*{itemTypes}">
+            </label>
+            <span th:if="${#fields.hasErrors('itemTypes')}" th:errors="*{itemTypes}">Item types error</span>
+
+            <p>Changed your mind? <a th:href="@{/categories}">Return</a></p>
+
+            <button type="submit" class="button">Save</button>
+        </form>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+
+</body>
+</html>

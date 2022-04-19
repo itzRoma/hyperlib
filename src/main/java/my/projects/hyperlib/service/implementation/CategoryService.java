@@ -13,10 +13,10 @@ import java.util.List;
 
 @Service
 public class CategoryService implements CommonServiceContract<Category> {
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
@@ -35,6 +35,15 @@ public class CategoryService implements CommonServiceContract<Category> {
         categoryRepository.delete(entity);
     }
 
+    public void update(Category source, Category target) {
+        target.setItemTypes(source.getItemTypes());
+
+        if (!source.getName().equals(target.getName()))
+            target.setName(source.getName());
+
+        categoryRepository.save(target);
+    }
+
     public Category findByName(String name) {
         return categoryRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException(String.format("Category '%s' not found!", name)));
@@ -42,5 +51,9 @@ public class CategoryService implements CommonServiceContract<Category> {
 
     public List<Category> findByItemType(ItemType itemType) {
         return new ArrayList<>(categoryRepository.findByItemType(itemType));
+    }
+
+    public boolean checkIfNameIsAvailable(String name) {
+        return categoryRepository.findByName(name).isEmpty();
     }
 }
