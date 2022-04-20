@@ -1,7 +1,6 @@
 package my.projects.hyperlib.controller;
 
 import my.projects.hyperlib.entity.User;
-import my.projects.hyperlib.exception.NotFoundException;
 import my.projects.hyperlib.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,16 +17,12 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
-    private UserService userService;
-    private PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public RegistrationController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -42,18 +37,22 @@ public class RegistrationController {
             BindingResult bindingResult,
             Model model
     ) {
+        newUser.setFirstName(newUser.getFirstName().trim());
+        newUser.setLastName(newUser.getLastName().trim());
+        newUser.setUsername(newUser.getUsername().trim());
+        newUser.setPassword(newUser.getPassword().trim());
+
+        if (!userService.checkIfUsernameIsAvailable(newUser.getUsername())) {
+            model.addAttribute("error", String.format("Username '%s' is taken!", newUser.getUsername()));
+            return "registration";
+        }
+
         if (bindingResult.hasErrors()) {
             return "registration";
         }
 
-        try {
-            User userFromDb = userService.findByUsername(newUser.getUsername());
-            model.addAttribute("error", String.format("User '%s' is already exists!", userFromDb.getUsername()));
-            return "registration";
-        } catch (NotFoundException ex) {
-            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-            userService.save(newUser);
-            return "redirect:/login";
-        }
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        userService.save(newUser);
+        return "redirect:/login";
     }
 }

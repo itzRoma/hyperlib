@@ -72,20 +72,21 @@ public class CategoryController {
             BindingResult bindingResult,
             Model model
     ) {
+        editedCategory.setName(editedCategory.getName().trim());
+
+        if (!name.equals(editedCategory.getName()) && !categoryService.checkIfNameIsAvailable(editedCategory.getName())) {
+            model.addAttribute("editedCategory", categoryService.findByName(name));
+            model.addAttribute("itemTypes", ItemType.values());
+            model.addAttribute("nameError", String.format("Category '%s' is already exists!", editedCategory.getName()));
+            return "category/categoryEditForm";
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("itemTypes", ItemType.values());
             return "category/categoryEditForm";
         }
 
         Category categoryToEdit = categoryService.findByName(name);
-        editedCategory.setName(editedCategory.getName().trim());
-
-        if (!categoryService.checkIfNameIsAvailable(editedCategory.getName()) && !name.equals(editedCategory.getName())) {
-            model.addAttribute("editedCategory", categoryService.findByName(name));
-            model.addAttribute("itemTypes", ItemType.values());
-            model.addAttribute("nameError", String.format("Category '%s' is already exists!", editedCategory.getName()));
-            return "category/categoryEditForm";
-        }
         categoryService.update(editedCategory, categoryToEdit);
         return "redirect:/categories";
     }
