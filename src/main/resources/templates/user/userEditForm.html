@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HyperLib | UserEdit</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main main-centered">
+        <form th:action="@{'/users/' + ${editedUser.username} + '/edit'}" method="post" th:object="${editedUser}" class="form">
+            <span class="form-title">User editing</span>
+
+            <input type="text" class="input-field" th:field="*{firstName}" readonly>
+
+            <input type="text" class="input-field" th:field="*{lastName}" readonly>
+
+            <input type="text" class="input-field" th:field="*{username}" readonly>
+
+            <label>Roles:
+                <input type="checkbox"
+                       th:each="role : ${roles}"
+                       th:text="${role.name()}"
+                       th:value="${role.name()}"
+                       th:field="*{roles}">
+            </label>
+            <span th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Roles error</span>
+
+            <p>Changed your mind? <a th:href="@{/users}">Return</a></p>
+
+            <button type="submit" class="button">Save</button>
+        </form>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+</body>
+</html>

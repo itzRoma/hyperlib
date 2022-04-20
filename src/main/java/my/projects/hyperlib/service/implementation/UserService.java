@@ -8,9 +8,11 @@ import my.projects.hyperlib.service.CommonServiceContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,14 +22,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService, CommonServiceContract<User> {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-//    Method which Spring requires for authentication
+    //    Method which Spring requires for authentication
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -67,6 +71,21 @@ public class UserService implements UserDetailsService, CommonServiceContract<Us
         userRepository.delete(entity);
     }
 
+    public void update(User source, User target) {
+        target.setFirstName(source.getFirstName());
+        target.setLastName(source.getLastName());
+
+        if (source.getPassword() != null && !source.getPassword().isEmpty())
+            target.setPassword(passwordEncoder.encode(source.getPassword()));
+
+        if (!source.getUsername().equals(target.getUsername())) {
+            target.setUsername(source.getUsername());
+            SecurityContextHolder.clearContext();
+        }
+
+        userRepository.save(target);
+    }
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException(String.format("User '%s' not found!", username)));
@@ -74,5 +93,9 @@ public class UserService implements UserDetailsService, CommonServiceContract<Us
 
     public List<User> findByRole(Role role) {
         return new ArrayList<>(userRepository.findByRole(role));
+    }
+
+    public boolean checkIfUsernameIsAvailable(String username) {
+        return userRepository.findByUsername(username).isEmpty();
     }
 }

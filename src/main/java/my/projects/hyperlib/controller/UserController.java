@@ -5,8 +5,6 @@ import my.projects.hyperlib.entity.User;
 import my.projects.hyperlib.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,126 +13,100 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private UserService userService;
-    private PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public String findAll(Model model) {
+    public String findAllUsers(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user/users";
     }
 
     @GetMapping("/{username}")
-    public String findOne(@PathVariable String username, Model model) {
-        User user = userService.findByUsername(username);
-        model.addAttribute("user", user);
+    public String findOneUser(@PathVariable String username, Model model) {
+        model.addAttribute("user", userService.findByUsername(username));
         return "user/user";
     }
 
-    @GetMapping("/{username}/edit")
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{username}/edit")
     public String showUserEditForm(@PathVariable String username, Model model) {
-        User user = userService.findByUsername(username);
-        model.addAttribute("user", user);
+        model.addAttribute("editedUser", userService.findByUsername(username));
         model.addAttribute("roles", Arrays.asList(Role.ADMIN, Role.LIBRARIAN));
-        return "user/userEdit";
+        return "user/userEditForm";
     }
 
     @GetMapping("/{username}/profileEdit")
-    public String showProfileEditForm(@PathVariable String username, Principal principal, Model model) {
+    public String showUserProfileEditForm(@PathVariable String username, Principal principal, Model model) {
         if (principal.getName().equals(username)) {
-            User user = userService.findByUsername(username);
-            model.addAttribute("user", user);
-            return "user/userProfileEdit";
+            model.addAttribute("editedUser", userService.findByUsername(username));
+            return "user/userProfileEditForm";
         }
         return "redirect:/users";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{username}/edit")
-    public String edit(
+    public String editUser(
             @PathVariable String username,
-            @RequestParam Map<String, String> form
+            @ModelAttribute("editedUser") User editedUser,
+            BindingResult bindingResult
     ) {
-        User userToEdit = userService.findByUsername(username);
-
-        Collection<String> roles = Stream.of(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet());
-
-        userToEdit.getRoles().clear();
-        userToEdit.getRoles().add(Role.USER);
-
-        for (String key : form.keySet()) {
-            if (roles.contains(key)) {
-                userToEdit.getRoles().add(Role.valueOf(key));
-            }
+        if (bindingResult.hasFieldErrors("roles")) {
+            return "user/userEditForm";
         }
 
+        User userToEdit = userService.findByUsername(username);
+        Set<Role> roles = new HashSet<>(Collections.singleton(Role.USER));
+
+        roles.addAll(editedUser.getRoles());
+        userToEdit.setRoles(roles);
         userService.save(userToEdit);
 
         return "redirect:/users";
     }
 
     @PostMapping("/{username}/profileEdit")
-    public String profileEdit(
+    public String editUserProfile(
             @PathVariable String username,
-            @ModelAttribute("user") @Valid User user,
+            @ModelAttribute("editedUser") @Valid User editedUser,
             BindingResult bindingResult,
-            @RequestParam(name = "newPassword", required = false) String newPassword,
             Model model
     ) {
-        if (
-                bindingResult.hasFieldErrors("firstName") ||
-                        bindingResult.hasFieldErrors("lastName") ||
-                        bindingResult.hasFieldErrors("username") ||
-                        checkIfPasswordIsIncorrect(newPassword)
-        ) {
-            if (checkIfPasswordIsIncorrect(newPassword)) {
-                model.addAttribute("passwordError", "Password should be 8 or more characters long!");
-            }
-            return "user/userProfileEdit";
+        editedUser.setFirstName(editedUser.getFirstName().trim());
+        editedUser.setLastName(editedUser.getLastName().trim());
+        editedUser.setUsername(editedUser.getUsername().trim());
+
+        if (!username.equals(editedUser.getUsername()) && !userService.checkIfUsernameIsAvailable(editedUser.getUsername())) {
+            model.addAttribute("editedUser", userService.findByUsername(username));
+            model.addAttribute("usernameError", String.format("Username '%s' is taken!", editedUser.getUsername()));
+            return "user/userProfileEditForm";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "user/userProfileEditForm";
         }
 
         User userToEdit = userService.findByUsername(username);
-
-        userToEdit.setFirstName(user.getFirstName());
-        userToEdit.setLastName(user.getLastName());
-
-        if (!newPassword.isEmpty()) {
-            userToEdit.setPassword(passwordEncoder.encode(newPassword));
-        }
-
-        if (!userToEdit.getUsername().equals(user.getUsername())) {
-            userToEdit.setUsername(user.getUsername());
-            SecurityContextHolder.clearContext();
-        }
-
-        userService.save(userToEdit);
-
+        userService.update(editedUser, userToEdit);
         return "redirect:/users/" + userToEdit.getUsername();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{username}/lockUnlock")
-    public String lockUnlock(@PathVariable String username) {
+    public String lockUnlockUser(@PathVariable String username) {
         User lockUnlockUser = userService.findByUsername(username);
 
         if (lockUnlockUser.getLocked()) {
@@ -147,14 +119,10 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{username}/delete")
-    public String delete(@PathVariable String username) {
+    public String deleteUser(@PathVariable String username) {
         userService.delete(userService.findByUsername(username));
         return "redirect:/users";
-    }
-
-    private boolean checkIfPasswordIsIncorrect(String password) {
-        String trimmedPassword = password.trim();
-        return !trimmedPassword.isEmpty() && (trimmedPassword.length() < 8 || trimmedPassword.length() > 255);
     }
 }
