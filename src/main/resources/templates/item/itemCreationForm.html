@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HyperLib | Item</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main main-centered">
+        <form th:action="@{/catalog/create}" method="post" th:object="${createdItem}" class="form">
+            <span class="form-title" th:text="'Create a ' + ${createdItem.itemType}"></span>
+
+            <input type="text" class="input-field" th:field="*{code}" placeholder="Code" autofocus>
+            <span th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Code error</span>
+            <span th:if="${codeError}" th:text="${codeError}">Code error</span>
+
+            <input type="text" class="input-field" th:field="*{itemType}" readonly>
+
+            <input type="text" class="input-field" th:field="*{title}" placeholder="Title">
+            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</span>
+
+            <input type="text" class="input-field" th:field="*{author}" placeholder="Author">
+            <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Author error</span>
+
+            <input type="text" class="input-field" th:field="*{description}" placeholder="Description">
+            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description error</span>
+
+            <label>Categories:</label>
+            <select th:field="*{categories}" multiple>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}">Categories error</span>
+
+            <p>Changed your mind? <a th:href="@{/catalog}">Return</a></p>
+
+            <button type="submit" class="button">Create</button>
+        </form>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+</body>
+</html>

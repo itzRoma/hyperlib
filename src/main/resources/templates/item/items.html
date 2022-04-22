@@ -1,8 +1,8 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HyperLib | Home</title>
+    <title>HyperLib | Catalog</title>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -11,9 +11,11 @@
     <header th:replace="common/header :: header"></header>
 
     <main class="main">
-        <span th:text="'Books: ' + ${books.size()}"></span>
-        <span th:text="'Movies: ' + ${movies.size()}"></span>
-        <span th:text="'Songs: ' + ${songs.size()}"></span>
+        <div style="text-align: center">
+            <h1 th:text="'Catalog of ' + ${itemType}"></h1>
+            <p th:text="'Available ' + ${itemType} + ': ' + ${items.size()}"></p>
+            <p th:text="'Amount of categories for ' + ${itemType} + ': ' + ${categories.size()}"></p>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

@@ -48,15 +48,6 @@ public class UserController {
         return "user/userEditForm";
     }
 
-    @GetMapping("/{username}/profileEdit")
-    public String showUserProfileEditForm(@PathVariable String username, Principal principal, Model model) {
-        if (principal.getName().equals(username)) {
-            model.addAttribute("editedUser", userService.findByUsername(username));
-            return "user/userProfileEditForm";
-        }
-        return "redirect:/users";
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{username}/edit")
     public String editUser(
@@ -75,6 +66,15 @@ public class UserController {
         userToEdit.setRoles(roles);
         userService.save(userToEdit);
 
+        return "redirect:/users";
+    }
+
+    @GetMapping("/{username}/profileEdit")
+    public String showUserProfileEditForm(@PathVariable String username, Principal principal, Model model) {
+        if (principal.getName().equals(username)) {
+            model.addAttribute("editedUser", userService.findByUsername(username));
+            return "user/userProfileEditForm";
+        }
         return "redirect:/users";
     }
 

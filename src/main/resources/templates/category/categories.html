@@ -11,8 +11,9 @@
     <header th:replace="common/header :: header"></header>
 
     <main class="main">
-        <div class="create-category-button">
-            <a th:href="@{/categories/create}" class="button" style="margin-bottom: 20px">Create a category</a>
+        <div class="create-button">
+            <span class="error-message" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-right: 20px">Error message</span>
+            <a th:href="@{/categories/create}" class="button">Create a category</a>
         </div>
 
         <table class="table">

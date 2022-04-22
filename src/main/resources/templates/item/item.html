@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HyperLib | Item</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main">
+        <h1 th:text="${item.itemType} + ' ' + ${item.title}"></h1>
+        <p th:text="'Code: ' + ${item.code}"></p>
+        <p th:text="'Author: ' + ${item.author}"></p>
+        <p th:text="'Description: ' + ${item.description}"></p>
+        <p>Categories: <span th:each="category : ${item.categories}" th:text="${category.name} + ', '"></span></p>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+</body>
+</html>

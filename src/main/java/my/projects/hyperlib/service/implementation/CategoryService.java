@@ -35,6 +35,7 @@ public class CategoryService implements CommonServiceContract<Category> {
         categoryRepository.delete(entity);
     }
 
+    @Override
     public void update(Category source, Category target) {
         target.setItemTypes(source.getItemTypes());
 
@@ -50,7 +51,7 @@ public class CategoryService implements CommonServiceContract<Category> {
     }
 
     public List<Category> findByItemType(ItemType itemType) {
-        return new ArrayList<>(categoryRepository.findByItemType(itemType));
+        return new ArrayList<>(categoryRepository.findByItemType(itemType.name()));
     }
 
     public boolean checkIfNameIsAvailable(String name) {

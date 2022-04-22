@@ -71,6 +71,7 @@ public class UserService implements UserDetailsService, CommonServiceContract<Us
         userRepository.delete(entity);
     }
 
+    @Override
     public void update(User source, User target) {
         target.setFirstName(source.getFirstName());
         target.setLastName(source.getLastName());

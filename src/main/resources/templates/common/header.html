@@ -15,9 +15,9 @@
         </div>
         <div class="nav-panel">
             <a th:href="@{/}" class="nav-link">Home</a>
-            <a th:href="@{/books}" class="nav-link">Books</a>
-            <a th:href="@{/movies}" class="nav-link">Movies</a>
-            <a th:href="@{/songs}" class="nav-link">Songs</a>
+            <a th:href="@{/catalog/books}" class="nav-link">Books</a>
+            <a th:href="@{/catalog/movies}" class="nav-link">Movies</a>
+            <a th:href="@{/catalog/songs}" class="nav-link">Songs</a>
 
             <!-- Only for admins -->
             <a class="nav-link"
@@ -26,6 +26,11 @@
                th:href="@{/users}">Users</a>
 
             <!-- Only for librarians -->
+            <a class="nav-link"
+               th:each="authority : ${#authentication.getAuthorities()}"
+               th:if="${authority.getAuthority().equals('ROLE_LIBRARIAN')}"
+               th:href="@{/catalog}">Catalog</a>
+
             <a class="nav-link"
                th:each="authority : ${#authentication.getAuthorities()}"
                th:if="${authority.getAuthority().equals('ROLE_LIBRARIAN')}"

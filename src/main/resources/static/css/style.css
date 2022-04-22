@@ -243,9 +243,11 @@ button {
     background-color: #ffffff;
 }
 
-.create-category-button {
+.create-button {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
+    margin-bottom: 20px;
 }
 
 /* USER PROFILE */

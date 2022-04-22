@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Set;
 
@@ -18,12 +20,17 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Title cannot be empty!")
+    @Column(unique = true)
+    @Size(min = 6, max = 6, message = "Provide 6-symbols code!")
+    private String code;
+
+    @NotBlank(message = "Title cannot be empty!")
     private String title;
 
-    @NotEmpty(message = "Author cannot be empty!")
+    @NotBlank(message = "Author cannot be empty!")
     private String author;
 
+    @Size(max = 1000, message = "Description is too big!")
     private String description;
 
     @CreationTimestamp
@@ -32,14 +39,23 @@ public class Item {
 
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "items_categories",
             joinColumns = @JoinColumn(name = "item_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
 
-    @Enumerated(EnumType.STRING)
-    private ItemType itemType;
+    public Item(String code, String title, String author, String description, ItemType itemType, Set<Category> categories) {
+        this.code = code;
+        this.title = title;
+        this.author = author;
+        this.description = description;
+        this.itemType = itemType;
+        this.categories = categories;
+    }
 
     @PrePersist
     public void prePersist() {

@@ -1,9 +1,11 @@
 package my.projects.hyperlib.controller;
 
+import lombok.AllArgsConstructor;
 import my.projects.hyperlib.entity.Category;
 import my.projects.hyperlib.entity.ItemType;
 import my.projects.hyperlib.exception.NotFoundException;
 import my.projects.hyperlib.service.implementation.CategoryService;
+import my.projects.hyperlib.service.implementation.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,16 +13,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Set;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
     private final CategoryService categoryService;
-
-    @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    private final ItemService itemService;
 
     @GetMapping
     public String findAllCategories(Model model) {
@@ -32,13 +33,6 @@ public class CategoryController {
     public String showCategoryCreationForm(@ModelAttribute("createdCategory") Category createdCategory, Model model) {
         model.addAttribute("itemTypes", ItemType.values());
         return "category/categoryCreationForm";
-    }
-
-    @GetMapping("/{name}/edit")
-    public String showCategoryEditForm(@PathVariable String name, Model model) {
-        model.addAttribute("editedCategory", categoryService.findByName(name));
-        model.addAttribute("itemTypes", ItemType.values());
-        return "category/categoryEditForm";
     }
 
     @PostMapping("/create")
@@ -63,6 +57,22 @@ public class CategoryController {
             categoryService.save(createdCategory);
             return "redirect:/categories";
         }
+    }
+
+    @GetMapping("/{name}/edit")
+    public String showCategoryEditForm(@PathVariable String name, Model model) {
+        Category editedCategory = categoryService.findByName(name);
+        int itemsWithThisCategory = itemService.findByCategory(editedCategory).size();
+
+        if (itemsWithThisCategory > 0) {
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("errorMessage", String.format("Cannot edit the category (%d items use it)!", itemsWithThisCategory));
+            return "category/categories";
+        }
+
+        model.addAttribute("editedCategory", editedCategory);
+        model.addAttribute("itemTypes", ItemType.values());
+        return "category/categoryEditForm";
     }
 
     @PostMapping("/{name}/edit")
@@ -92,8 +102,17 @@ public class CategoryController {
     }
 
     @PostMapping("/{name}/delete")
-    public String deleteCategory(@PathVariable String name) {
-        categoryService.delete(categoryService.findByName(name));
+    public String deleteCategory(@PathVariable String name, Model model) {
+        Category category = categoryService.findByName(name);
+        int itemsWithThisCategory = itemService.findByCategory(category).size();
+
+        if (itemsWithThisCategory > 0) {
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("errorMessage", String.format("Cannot delete the category (%d items use it)!", itemsWithThisCategory));
+            return "category/categories";
+        }
+
+        categoryService.delete(category);
         return "redirect:/categories";
     }
 }

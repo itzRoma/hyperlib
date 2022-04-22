@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HyperLib | Catalog</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header th:replace="common/header :: header"></header>
+
+    <main class="main">
+        <div class="create-button">
+            <a th:href="@{'/catalog/create?itemType=book'}" class="button">Create a book</a>
+            <a th:href="@{'/catalog/create?itemType=movie'}" class="button" style="margin: 0 10px">Create a movie</a>
+            <a th:href="@{'/catalog/create?itemType=song'}" class="button">Create a song</a>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Item type</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Categories</th>
+                <th>Adding date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td><span th:text="${item.id}" style="font-weight: 600"></span></td>
+                <td><a th:href="@{'/catalog/item/' + ${item.code}}" th:text="${item.code}"></a></td>
+                <td><span th:text="${item.itemType}"></span></td>
+                <td><span th:text="${item.title}"></span></td>
+                <td><span th:text="${item.author}"></span></td>
+                <td><span th:each="category : ${item.categories}" th:text="' ( ' + ${category.name} + ' ) '"></span></td>
+                <td><span th:text="${item.addingDate}"></span></td>
+
+                <td>
+                    <div class="action-buttons">
+                        <a th:href="@{'/catalog/item/' + ${item.code} + '/edit'}" class="action-button">
+                            <img th:src="@{/img/common/edit.png}" alt="edit">
+                        </a>
+
+                        <form th:action="@{'/catalog/item/' + ${item.code} + '/delete'}" method="post">
+                            <button type="submit" class="action-button">
+                                <img th:src="@{/img/common/delete.png}" alt="delete">
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer th:replace="common/footer :: footer"></footer>
+</div>
+</body>
+</html>
