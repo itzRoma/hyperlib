@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <title>HyperLib | Catalog</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
-    <main class="main">
-        <div style="text-align: center">
+    <main class="main main-centered">
+        <div class="container">
             <h1 th:text="'Catalog of ' + ${itemType}"></h1>
             <p th:text="'Available ' + ${itemType} + ': ' + ${items.size()}"></p>
             <p th:text="'Amount of categories for ' + ${itemType} + ': ' + ${categories.size()}"></p>

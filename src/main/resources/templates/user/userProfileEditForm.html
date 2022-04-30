@@ -2,34 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HyperLib | UserProfileEdit</title>
+    <title>HyperLib | Profile</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{'/users/' + ${editedUser.username} + '/profileEdit'}" method="post" th:object="${editedUser}" class="form">
-            <span class="form-title">Profile editing</span>
+        <form th:action="@{'/users/' + ${editedUser.username} + '/profileEdit'}" method="post" th:object="${editedUser}"
+              class="form">
+            <div class="form-title mb-3 fs-3">Edit the profile</div>
 
-            <input type="text" class="input-field" th:field="*{firstName}" placeholder="New First Name">
-            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Firstname error</span>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
+                       placeholder="New first name" autofocus/>
+                <label for="firstName">First name</label>
+            </div>
+            <span class="error" th:if="${#fields.hasErrors('firstName')}"
+                  th:errors="*{firstName}">First name error</span>
 
-            <input type="text" class="input-field" th:field="*{lastName}" placeholder="New Last Name">
-            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname error</span>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
+                       placeholder="New last name"/>
+                <label for="lastName">Last name</label>
+            </div>
+            <span class="error" th:if="${#fields.hasErrors('lastName')}"
+                  th:errors="*{lastName}">Last name error</span>
 
-            <input type="text" class="input-field" th:field="*{username}" placeholder="New Username">
-            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
-            <span th:if="${usernameError}" th:text="${usernameError}">Username error</span>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="username" th:field="*{username}"
+                       placeholder="New username"/>
+                <label for="username">Username</label>
+            </div>
+            <span class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
+            <p class="error" th:if="${usernameError}" th:text="${usernameError}">Username error</p>
 
-            <input type="password" class="input-field" th:field="*{password}" placeholder="Confirm Or Update Password">
-            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" th:field="*{password}"
+                       placeholder="Confirm/update password"/>
+                <label for="password">Password</label>
+            </div>
+            <span class="error" th:if="${#fields.hasErrors('password')}"
+                  th:errors="*{password}">Password error</span>
 
             <p>Changed your mind? <a th:href="@{'/users/' + ${editedUser.username}}">Return</a></p>
 
-            <button type="submit" class="button">Save</button>
+            <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </main>
 

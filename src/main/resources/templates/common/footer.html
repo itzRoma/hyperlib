@@ -2,20 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>HyperLib | Footer</title>
 </head>
-
 <body>
 <footer class="footer" th:fragment="footer">
-    <div class="logo">
-        <img th:src="@{/img/common/logo.png}" alt="logo">
-    </div>
-    <div class="title">
-        <a th:href="@{/}">HyperLib</a>
-    </div>
-    <div class="author">
-        <span>by Roman Bondarenko</span>
-    </div>
+    <nav class="navbar navbar-light">
+        <div class="container">
+            <div class="col-4 d-flex justify-content-start">
+                <img th:src="@{/img/common/logo.png}" alt="logo" width="auto" height="50" class="navbar-brand"/>
+            </div>
+            <div class="col-4 d-flex justify-content-center">HyperLib</div>
+            <div class="col-4 d-flex justify-content-end">
+                by Roman Bondarenko
+            </div>
+        </div>
+    </nav>
 </footer>
 </body>
 </html>

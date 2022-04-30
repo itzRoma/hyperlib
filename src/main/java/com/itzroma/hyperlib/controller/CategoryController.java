@@ -63,7 +63,9 @@ public class CategoryController {
 
         if (itemsWithThisCategory > 0) {
             model.addAttribute("categories", categoryService.findAll());
-            model.addAttribute("errorMessage", String.format("Cannot edit the category (%d items use it)!", itemsWithThisCategory));
+            model.addAttribute("errorMessage", String.format("Cannot edit the category '%s' (%d items use it)!",
+                    editedCategory.getName(), itemsWithThisCategory
+            ));
             return "category/categories";
         }
 
@@ -105,7 +107,9 @@ public class CategoryController {
 
         if (itemsWithThisCategory > 0) {
             model.addAttribute("categories", categoryService.findAll());
-            model.addAttribute("errorMessage", String.format("Cannot delete the category (%d items use it)!", itemsWithThisCategory));
+            model.addAttribute("errorMessage", String.format("Cannot delete the category '%s' (%d items use it)!",
+                    category.getName(), itemsWithThisCategory
+            ));
             return "category/categories";
         }
 

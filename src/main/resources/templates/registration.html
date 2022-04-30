@@ -4,38 +4,54 @@
     <meta charset="UTF-8">
     <title>HyperLib | Registration</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{/registration}" method="post" th:object="${newUser}" class="form">
-            <span class="form-title">Register an account</span>
+        <div class="container">
+            <form th:action="@{/registration}" method="post" th:object="${newUser}" class="form">
+                <div class="form-title mb-3 fs-3">Register an account</div>
 
-            <span class="error-message" th:if="${error != null}" th:text="${error}">Error message</span>
+                <span class="error" th:if="${error != null}" th:text="${error}">Error message</span>
 
-            <input type="text" class="input-field" th:field="*{firstName}" placeholder="First Name" autofocus>
-            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Firstname error</span>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="First name" autofocus/>
+                    <label for="firstName">First name</label>
+                </div>
+                <span class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Firstname error</span>
 
-            <input type="text" class="input-field" th:field="*{lastName}" placeholder="Last Name">
-            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname error</span>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Last name" />
+                    <label for="lastName">Last name</label>
+                </div>
+                <span class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname error</span>
 
-            <input type="text" class="input-field" th:field="*{username}" placeholder="Username">
-            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Username" />
+                    <label for="username">Username</label>
+                </div>
+                <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
 
-            <input type="password" class="input-field" name="password" th:field="*{password}" placeholder="Password">
-            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Password" />
+                    <label for="password">Password</label>
+                </div>
+                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
 
-            <p>Already have an account? <a th:href="@{/login}">Login</a></p>
+                <p>Already have an account? <a th:href="@{/login}">Login</a></p>
 
-            <button type="submit" class="button">Register</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>
 </div>
-
 </body>
 </html>

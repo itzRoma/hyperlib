@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <title>HyperLib | Item</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
-    <main class="main">
+    <main class="main main-centered">
         <h1 th:text="${item.itemType} + ' ' + ${item.title}"></h1>
         <p th:text="'Code: ' + ${item.code}"></p>
         <p th:text="'Author: ' + ${item.author}"></p>

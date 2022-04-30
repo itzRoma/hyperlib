@@ -4,50 +4,56 @@
     <meta charset="UTF-8">
     <title>HyperLib | Categories</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
     <main class="main">
-        <div class="create-button">
-            <span class="error-message" th:if="${errorMessage}" th:text="${errorMessage}" style="margin-right: 20px">Error message</span>
-            <a th:href="@{/categories/create}" class="button">Create a category</a>
+        <div class="container-fluid">
+            <div class="d-flex justify-content-end">
+                <span class="error me-2 align-self-center" th:if="${errorMessage}" th:text="${errorMessage}"></span>
+                <a class="btn btn-primary" th:href="@{/categories/create}">Create a category</a>
+            </div>
+
+            <table class="table table-striped table-hover caption-top align-middle" style="table-layout: fixed">
+                <caption>Catalog</caption>
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Item types</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category : ${categories}">
+                    <td class="fw-bold" th:text="${category.id}"></td>
+                    <td th:text="${category.name}"></td>
+                    <td th:text="${category.itemTypes}"></td>
+
+                    <td>
+                        <div class="action-buttons">
+                            <a th:href="@{'/categories/' + ${category.name} + '/edit'}" class="action-button">
+                                <img th:src="@{/img/common/edit.png}" alt="edit">
+                            </a>
+
+                            <!-- DELETING CATEGORY -->
+                            <form th:action="@{'/categories/' + ${category.name} + '/delete'}" method="post">
+                                <button type="submit" class="action-button">
+                                    <img th:src="@{/img/common/delete.png}" alt="delete">
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Item types</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="category : ${categories}">
-                <td><span th:text="${category.id}" style="font-weight: 600"></span></td>
-                <td><span th:text="${category.name}"></span></td>
-                <td><span th:text="${category.itemTypes}"></span></td>
-
-                <td>
-                    <div class="action-buttons">
-                        <a th:href="@{'/categories/' + ${category.name} + '/edit'}" class="action-button">
-                            <img th:src="@{/img/common/edit.png}" alt="edit">
-                        </a>
-
-                        <!-- DELETING CATEGORY -->
-                        <form th:action="@{'/categories/' + ${category.name} + '/delete'}" method="post">
-                            <button type="submit" class="action-button">
-                                <img th:src="@{/img/common/delete.png}" alt="delete">
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

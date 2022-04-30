@@ -4,44 +4,62 @@
     <meta charset="UTF-8">
     <title>HyperLib | Item</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{'/catalog/item/' + ${editedItem.code} + '/edit'}" method="post" th:object="${editedItem}" class="form">
-            <span class="form-title" th:text="'Edit the ' + ${editedItem.itemType}"></span>
+        <div class="container">
+            <form th:action="@{'/catalog/item/' + ${editedItem.code} + '/edit'}" method="post" th:object="${editedItem}" class="form">
+                <div class="form-title mb-3 fs-3" th:text="'Edit the ' + ${editedItem.itemType}"></div>
 
-            <input type="text" class="input-field" th:field="*{code}" placeholder="Code" autofocus>
-            <span th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Code error</span>
-            <span th:if="${codeError}" th:text="${codeError}">Code error</span>
+                <input type="hidden" th:field="*{itemType}">
 
-            <input type="text" class="input-field" th:field="*{itemType}" readonly>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="code" th:field="*{code}" placeholder="Code" autofocus/>
+                    <label for="code">Code</label>
+                </div>
+                <span class="error" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Code error</span>
+                <p class="error" th:if="${codeError}" th:text="${codeError}">Code error</p>
 
-            <input type="text" class="input-field" th:field="*{title}" placeholder="Title">
-            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</span>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Title"/>
+                    <label for="title">Title</label>
+                </div>
+                <span class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</span>
 
-            <input type="text" class="input-field" th:field="*{author}" placeholder="Author">
-            <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Author error</span>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="author" th:field="*{author}" placeholder="Author"/>
+                    <label for="author">Author</label>
+                </div>
+                <span class="error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Author error</span>
 
-            <input type="text" class="input-field" th:field="*{description}" placeholder="Description">
-            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description error</span>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+                </div>
+                <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description error</span>
 
-            <label>Categories:</label>
-            <select th:field="*{categories}" multiple>
-                <option th:each="category : ${categories}"
-                        th:value="${category.id}"
-                        th:text="${category.name}">
-                </option>
-            </select>
-            <span th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}">Categories error</span>
+                <div class="mb-3">
+                    <label for="categories" class="form-label">Categories:</label>
+                    <select class="form-select" id="categories" size="3" th:field="*{categories}" multiple>
+                        <option th:each="category : ${categories}"
+                                th:value="${category.id}"
+                                th:text="${category.name}" />
+                    </select>
+                </div>
+                <span th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}">Categories error</span>
 
-            <p>Changed your mind? <a th:href="@{/catalog}">Return</a></p>
+                <p>Changed your mind? <a th:href="@{/catalog}">Return</a></p>
 
-            <button type="submit" class="button">Save</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

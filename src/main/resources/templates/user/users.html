@@ -4,67 +4,73 @@
     <meta charset="UTF-8">
     <title>HyperLib | Users</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
     <main class="main">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Full Name</th>
-                <th>Username</th>
-                <th>Roles</th>
-                <th>Registration Date</th>
-                <th>Locked</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td><span th:text="${user.id}" style="font-weight: 600"></span></td>
-                <td><span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></td>
-                <td><a th:href="@{'/users/' + ${user.username}}" th:text="${user.username}"></a></td>
-                <td><span th:text="${user.roles}"></span></td>
-                <td><span th:text="${user.registrationDate}"></span></td>
+        <div class="container-fluid">
+            <table class="table table-striped table-hover caption-top align-middle">
+                <caption>Users</caption>
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Roles</th>
+                    <th scope="col">Registration Date</th>
+                    <th scope="col">Blocked</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td class="fw-bold" th:text="${user.id}"></td>
+                    <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
+                    <td><a th:href="@{'/users/' + ${user.username}}" th:text="${user.username}"></a></td>
+                    <td th:text="${user.roles}"></td>
+                    <td th:text="${user.registrationDate}"></td>
 
-                <td>
-                    <img th:src="@{'/img/common/' + 'true' + '.png'}" alt="true" th:if="${user.getLocked == true}">
-                    <img th:src="@{'/img/common/' + 'false' + '.png'}" alt="false" th:if="${user.getLocked == false}">
-                </td>
+                    <td>
+                        <img th:src="@{'/img/common/' + 'true' + '.png'}" alt="true" th:if="${user.getLocked}">
+                        <img th:src="@{'/img/common/' + 'false' + '.png'}" alt="false" th:unless="${user.getLocked}">
+                    </td>
 
-                <td th:if="${user.username != #authentication.name}">
-                    <div class="action-buttons">
-                        <a th:href="@{'/users/' + ${user.username} + '/edit'}" class="action-button">
-                            <img th:src="@{/img/common/edit.png}" alt="edit">
-                        </a>
+                    <td th:if="${user.username != #authentication.name}">
+                        <div class="action-buttons">
+                            <a th:href="@{'/users/' + ${user.username} + '/edit'}" class="action-button">
+                                <img th:src="@{/img/common/edit.png}" alt="edit">
+                            </a>
 
-                        <!-- LOCKING-UNLOCKING USER -->
-                        <form th:action="@{'/users/' + ${user.username} + '/lockUnlock'}" method="post">
-                            <button type="submit" class="action-button" th:if="${user.getLocked == false}">
-                                <img th:src="@{/img/common/lock.png}" alt="lock">
-                            </button>
-                            <button type="submit" class="action-button" th:if="${user.getLocked == true}">
-                                <img th:src="@{/img/common/unlock.png}" alt="unlock">
-                            </button>
-                        </form>
+                            <!-- LOCKING-UNLOCKING USER -->
+                            <form th:action="@{'/users/' + ${user.username} + '/lockUnlock'}" method="post">
+                                <button type="submit" class="action-button" th:if="${user.getLocked == false}">
+                                    <img th:src="@{/img/common/lock.png}" alt="lock">
+                                </button>
+                                <button type="submit" class="action-button" th:if="${user.getLocked == true}">
+                                    <img th:src="@{/img/common/unlock.png}" alt="unlock">
+                                </button>
+                            </form>
 
-                        <!-- DELETING USER -->
-                        <form th:action="@{'/users/' + ${user.username} + '/delete'}" method="post">
-                            <button type="submit" class="action-button">
-                                <img th:src="@{/img/common/delete.png}" alt="delete">
-                            </button>
-                        </form>
-                    </div>
-                </td>
+                            <!-- DELETING USER -->
+                            <form th:action="@{'/users/' + ${user.username} + '/delete'}" method="post">
+                                <button type="submit" class="action-button">
+                                    <img th:src="@{/img/common/delete.png}" alt="delete">
+                                </button>
+                            </form>
+                        </div>
+                    </td>
 
-                <td th:unless="${user.username != #authentication.name}"></td>
-            </tr>
-            </tbody>
-        </table>
+                    <td th:unless="${user.username != #authentication.name}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

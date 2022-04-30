@@ -2,38 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HyperLib | UserEdit</title>
+    <title>HyperLib | User</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{'/users/' + ${editedUser.username} + '/edit'}" method="post" th:object="${editedUser}" class="form">
-            <span class="form-title">User editing</span>
+        <div class="container">
+            <form th:action="@{'/users/' + ${editedUser.username} + '/edit'}" method="post" th:object="${editedUser}"
+                  class="form">
+                <div class="form-title mb-3 fs-3">Edit the user</div>
 
-            <input type="text" class="input-field" th:field="*{firstName}" readonly>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
+                           placeholder="First name" readonly/>
+                    <label for="firstName">First name</label>
+                </div>
 
-            <input type="text" class="input-field" th:field="*{lastName}" readonly>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
+                           placeholder="Last name" readonly/>
+                    <label for="lastName">Last name</label>
+                </div>
 
-            <input type="text" class="input-field" th:field="*{username}" readonly>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="username" th:field="*{username}"
+                           placeholder="Username" readonly/>
+                    <label for="username">Username</label>
+                </div>
 
-            <label>Roles:
-                <input type="checkbox"
-                       th:each="role : ${roles}"
-                       th:text="${role.name()}"
-                       th:value="${role.name()}"
-                       th:field="*{roles}">
-            </label>
-            <span th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Roles error</span>
+                <div class="mb-2">
+                    <span>Roles:</span>
+                    <div class="form-check" th:each="role : ${roles}">
+                        <input class="form-check-input" type="checkbox"
+                               th:id="${role.name()}" th:value="${role.name()}" th:field="*{roles}">
+                        <label class="form-check-label" th:for="${role.name()}"
+                               th:text="${role.name()}"></label>
+                    </div>
+                </div>
+                <span th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Roles error</span>
 
-            <p>Changed your mind? <a th:href="@{/users}">Return</a></p>
+                <p>Changed your mind? <a th:href="@{/users}">Return</a></p>
 
-            <button type="submit" class="button">Save</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

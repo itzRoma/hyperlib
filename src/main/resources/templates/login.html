@@ -4,26 +4,37 @@
     <meta charset="UTF-8">
     <title>HyperLib | Login</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <form th:action="@{/login}" method="post" class="form">
-            <span class="form-title">Login please</span>
+        <div class="container">
+            <form th:action="@{/login}" method="post" class="form">
+                <div class="form-title mb-3 fs-3">Login please</div>
 
-            <span class="error-message" th:if="${error != null}" th:text="${error}"></span>
+                <span class="error" th:if="${error != null}" th:text="${error}"></span>
 
-            <input type="text" class="input-field" name="username" placeholder="Username" required autofocus>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username" autofocus/>
+                    <label for="username">Username</label>
+                </div>
 
-            <input type="password" class="input-field" name="password" placeholder="Password" required>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" />
+                    <label for="password">Password</label>
+                </div>
 
-            <p>Do not have an account? <a th:href="@{/registration}">Register</a></p>
+                <p>Do not have an account? <a th:href="@{/registration}">Register</a></p>
 
-            <button type="submit" class="button">Login</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>
