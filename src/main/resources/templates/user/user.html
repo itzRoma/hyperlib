@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>HyperLib | User</title>
@@ -15,11 +15,47 @@
 
     <main class="main main-centered">
         <div class="container">
-            <p><img th:src="@{${user.imageUrl}}" alt="profileImage" width="auto" height="200"></p>
-            <p th:text="${user.firstName} + ' ' + ${user.lastName}"></p>
-            <p th:text="${user.username}"></p>
-            <a class="btn btn-primary" th:if="${#authentication.name == user.username}"
-               th:href="@{'/users/' + ${user.username} + '/profileEdit'}">Edit profile</a>
+            <div class="card item-card" style="width: 50rem">
+                <div class="row g-0">
+                    <div class="col-md-4 d-flex align-items-center">
+                        <img th:src="@{${user.getImageUrl()}}" class="img-fluid rounded-start w-100 h-auto" alt="image">
+                    </div>
+                    <div class="col-md-8 d-flex flex-column">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <p class="card-text mb-0">
+                                <small class="text-muted"
+                                       th:text="${user.getUsername()} + ' (' + ${user.getFirstName()} + ' ' + ${user.getLastName()} + ')'"></small>
+                            </p>
+                            <a th:if="${user.getUsername().equals(#authentication.getName())}"
+                               th:href="@{'/users/' + ${user.getUsername()} + '/profileEdit'}"
+                               class="btn btn-primary">Edit profile</a>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text text-muted fs-6">Favorites</p>
+                            <div class="list-group">
+                                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"
+                                     th:each="favorite : ${user.getFavorites()}">
+                                    <a th:href="@{'/catalog/item/' + ${favorite.getCode()}}"
+                                       th:text="${favorite.getItemType()} + ' : ' + ${favorite.getTitle()}"></a>
+                                    <form th:action="@{'/catalog/item/' + ${favorite.getCode()}  + '/removeFromFavorites'}"
+                                          method="post" th:if="${user.getUsername().equals(#authentication.getName())}">
+                                        <input type="hidden" name="calledFrom" value="profile">
+                                        <button class="action-button" type="submit">
+                                            <img th:src="@{'/img/common/false.png'}" alt="X">
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <p class="card-text">
+                                <small class="text-muted"
+                                       th:text="'With us since: ' + ${user.getRegistrationDate()}"></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 

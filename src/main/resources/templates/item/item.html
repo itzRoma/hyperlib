@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>HyperLib | Item</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
@@ -14,11 +14,56 @@
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <h1 th:text="${item.itemType} + ' ' + ${item.title}"></h1>
-        <p th:text="'Code: ' + ${item.code}"></p>
-        <p th:text="'Author: ' + ${item.author}"></p>
-        <p th:text="'Description: ' + ${item.description}"></p>
-        <p>Categories: <span th:each="category : ${item.categories}" th:text="${category.name} + ', '"></span></p>
+        <div class="container">
+            <div class="card item-card" style="width: 50rem">
+                <div class="row g-0">
+                    <div class="col-md-4 d-flex align-items-center">
+                        <img th:src="@{${item.getImageUrl()}}" class="img-fluid rounded-start w-100 h-auto" alt="image">
+                    </div>
+                    <div class="col-md-8 d-flex flex-column">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <p class="card-text mb-0">
+                                <small class="text-muted" th:text="${item.getItemType()} + ' : ' + ${item.getCode()}"></small>
+                            </p>
+                            <div class="d-flex align-items-center">
+                                <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/addToFavorites'}"
+                                      method="post" class="me-1">
+                                    <input type="hidden" name="calledFrom" value="directly">
+                                    <button class="btn btn-primary" type="submit">
+                                        Add to favorites
+                                    </button>
+                                </form>
+                                <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/removeFromFavorites'}"
+                                      method="post">
+                                    <input type="hidden" name="calledFrom" value="item">
+                                    <button class="btn btn-outline-primary" type="submit">
+                                        Remove from favorites
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <small class="text-muted">Author - Title</small><br>
+                                <span class="fs-4" th:text="${item.getAuthor()} + ' - ' + ${item.getTitle()}"></span>
+                            </p>
+                            <p class="card-text" th:if="${!item.getCategories().isEmpty()}">
+                                <small class="text-muted" th:text="'Categories: ' + ${item.getCategories()}"></small>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">Description</small>
+                                <span th:text="${item.getDescription()}"></span>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <p class="card-text">
+                                <small class="text-muted" th:text="'Added at: ' + ${item.getAddingDate()}"></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

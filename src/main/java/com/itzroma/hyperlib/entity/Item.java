@@ -7,7 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -33,8 +34,7 @@ public class Item {
     private String description;
 
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date addingDate;
+    private LocalDate addingDate;
 
     private String imageUrl;
 
@@ -59,5 +59,18 @@ public class Item {
     @PrePersist
     public void prePersist() {
         imageUrl = "/img/common/defaultItemImage.png";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id) && Objects.equals(code, item.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code);
     }
 }

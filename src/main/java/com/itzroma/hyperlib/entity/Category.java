@@ -26,4 +26,9 @@ public class Category {
     @CollectionTable(name = "categories_item_types", joinColumns = @JoinColumn(name = "category_id"))
     @NotEmpty(message = "Item types were not specified!")
     private Set<ItemType> itemTypes;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

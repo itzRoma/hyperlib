@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -47,6 +48,12 @@ public class User {
     @CollectionTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"))
     private Set<Role> roles;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private Set<Item> favorites;
+
     public User(String username, String password, String firstName, String lastName) {
         this.username = username;
         this.password = password;
@@ -59,5 +66,6 @@ public class User {
         imageUrl = "/img/common/defaultProfileImage.png";
         locked = false;
         roles = Collections.singleton(Role.USER);
+        favorites = new LinkedHashSet<>();
     }
 }

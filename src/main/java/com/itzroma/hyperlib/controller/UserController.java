@@ -40,6 +40,12 @@ public class UserController {
         return "user/user";
     }
 
+    @GetMapping("/search")
+    public String search(@RequestParam(name = "username") String username, Model model) {
+        model.addAttribute("user", userService.findByUsername(username));
+        return "user/user";
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{username}/edit")
     public String showUserEditForm(@PathVariable String username, Model model) {

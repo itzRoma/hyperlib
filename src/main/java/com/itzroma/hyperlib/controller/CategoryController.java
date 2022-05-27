@@ -6,6 +6,7 @@ import com.itzroma.hyperlib.entity.ItemType;
 import com.itzroma.hyperlib.exception.NotFoundException;
 import com.itzroma.hyperlib.service.implementation.CategoryService;
 import com.itzroma.hyperlib.service.implementation.ItemService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 
 @Controller
 @AllArgsConstructor
+@PreAuthorize("hasRole('LIBRARIAN')")
 @RequestMapping("/categories")
 public class CategoryController {
     private final CategoryService categoryService;

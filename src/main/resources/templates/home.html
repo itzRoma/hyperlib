@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>HyperLib | Home</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </head>
@@ -14,9 +14,117 @@
     <header th:replace="common/header :: header"></header>
 
     <main class="main main-centered">
-        <p th:text="'Books: ' + ${books.size()}"></p>
-        <p th:text="'Movies: ' + ${movies.size()}"></p>
-        <p th:text="'Songs: ' + ${songs.size()}"></p>
+        <div class="container">
+            <h1>Recently added items</h1>
+
+            <h1 class="items-title mt-5">Books</h1>
+            <div class="row row-cols-1 row-cols-md-5 g-4">
+                <div class="col" th:each="book : ${books}">
+                    <div class="card h-100">
+                        <img th:src="@{/img/common/defaultItemImage.png}" class="card-img-top"
+                             alt="item-image">
+                        <div class="card-body">
+                            <a th:href="@{'/catalog/item/' + ${book.getCode()}}">
+                                <h5 class="card-title" th:text="${book.getTitle()}"></h5>
+                            </a>
+                            <p class="card-text description" th:text="${book.getDescription()}"></p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <p class="card-text text-muted mb-0">Added at:<br>
+                                <small th:text="${book.getAddingDate()}"></small>
+                            </p>
+                            <form th:action="@{'/catalog/item/' + ${book.getCode()}  + '/addToFavorites'}"
+                                  method="post">
+                                <input type="hidden" name="calledFrom" value="home">
+                                <button class="action-button" type="submit">
+                                    <img th:src="@{/img/common/favorite.png}">
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" style="min-height: 441px">
+                    <a th:href="@{/catalog/books}" class="text-decoration-none text-white">
+                        <div class="h-100 bg-primary d-flex align-items-center justify-content-center rounded">
+                            <h2 style="transform: rotateZ(-90deg)">More</h2>
+                            <img th:src="@{/img/common/rightArrowInCircle.png}" alt=">" width="32" height="auto">
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <h1 class="items-title mt-5">Movies</h1>
+            <div class="row row-cols-1 row-cols-md-5 g-4">
+                <div class="col" th:each="movie : ${movies}">
+                    <div class="card h-100">
+                        <img th:src="@{/img/common/defaultItemImage.png}" class="card-img-top"
+                             alt="item-image">
+                        <div class="card-body">
+                            <a th:href="@{'/catalog/item/' + ${movie.getCode()}}">
+                                <h5 class="card-title" th:text="${movie.getTitle()}"></h5>
+                            </a>
+                            <p class="card-text description" th:text="${movie.getDescription()}"></p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <p class="card-text text-muted mb-0">Added at:<br>
+                                <small th:text="${movie.getAddingDate()}"></small>
+                            </p>
+                            <form th:action="@{'/catalog/item/' + ${movie.getCode()}  + '/addToFavorites'}"
+                                  method="post">
+                                <input type="hidden" name="calledFrom" value="home">
+                                <button class="action-button" type="submit">
+                                    <img th:src="@{/img/common/favorite.png}">
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" style="min-height: 441px">
+                    <a th:href="@{/catalog/movies}" class="text-decoration-none text-white">
+                        <div class="h-100 bg-primary d-flex align-items-center justify-content-center rounded">
+                            <h2 style="transform: rotateZ(-90deg)">More</h2>
+                            <img th:src="@{/img/common/rightArrowInCircle.png}" alt=">" width="32" height="auto">
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <h1 class="items-title mt-5">Songs</h1>
+            <div class="row row-cols-1 row-cols-md-5 g-4">
+                <div class="col" th:each="song : ${songs}">
+                    <div class="card h-100">
+                        <img th:src="@{/img/common/defaultItemImage.png}" class="card-img-top"
+                             alt="item-image">
+                        <div class="card-body">
+                            <a th:href="@{'/catalog/item/' + ${song.getCode()}}">
+                                <h5 class="card-title" th:text="${song.getTitle()}"></h5>
+                            </a>
+                            <p class="card-text description" th:text="${song.getDescription()}"></p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <p class="card-text text-muted mb-0">Added at:<br>
+                                <small th:text="${song.getAddingDate()}"></small>
+                            </p>
+                            <form th:action="@{'/catalog/item/' + ${song.getCode()}  + '/addToFavorites'}"
+                                  method="post">
+                                <input type="hidden" name="calledFrom" value="home">
+                                <button class="action-button" type="submit">
+                                    <img th:src="@{/img/common/favorite.png}">
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" style="min-height: 441px">
+                    <a th:href="@{/catalog/songs}" class="text-decoration-none text-white">
+                        <div class="h-100 bg-primary d-flex align-items-center justify-content-center rounded">
+                            <h2 style="transform: rotateZ(-90deg)">More</h2>
+                            <img th:src="@{/img/common/rightArrowInCircle.png}" alt=">" width="32" height="auto">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer th:replace="common/footer :: footer"></footer>

@@ -1,10 +1,12 @@
 package com.itzroma.hyperlib.service.implementation;
 
+import com.itzroma.hyperlib.entity.Item;
 import com.itzroma.hyperlib.entity.User;
 import com.itzroma.hyperlib.exception.NotFoundException;
 import com.itzroma.hyperlib.repository.UserRepository;
 import com.itzroma.hyperlib.entity.Role;
 import com.itzroma.hyperlib.service.CommonServiceContract;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,16 +22,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService, CommonServiceContract<User> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     //    Method which Spring requires for authentication
 
@@ -54,7 +51,7 @@ public class UserService implements UserDetailsService, CommonServiceContract<Us
                 .collect(Collectors.toSet());
     }
 
-//    Business logic
+    //    Business logic
 
     @Override
     public List<User> findAll() {
@@ -94,6 +91,16 @@ public class UserService implements UserDetailsService, CommonServiceContract<Us
 
     public List<User> findByRole(Role role) {
         return new ArrayList<>(userRepository.findByRole(role));
+    }
+
+    public void addToFavorites(User user, Item item) {
+        user.getFavorites().add(item);
+        userRepository.save(user);
+    }
+
+    public void removeFromFavorites(User user, Item item) {
+        user.getFavorites().remove(item);
+        userRepository.save(user);
     }
 
     public boolean checkIfUsernameIsAvailable(String username) {

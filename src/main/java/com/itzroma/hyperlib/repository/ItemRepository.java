@@ -16,6 +16,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findByItemType(ItemType itemType);
 
+    List<Item> findByTitleContainingIgnoreCase(String title);
+
     @Query(value = "SELECT * FROM items INNER JOIN items_categories ON items.id = items_categories.item_id WHERE category_id = :category_id", nativeQuery = true)
     List<Item> findByCategoryId(@Param("category_id") Long categoryId);
 
