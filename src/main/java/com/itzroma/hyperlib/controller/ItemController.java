@@ -37,12 +37,15 @@ public class ItemController {
                 categories,
                 title
         );
+        model.addAttribute("itemService", itemService);
         return "item/items";
     }
 
     @GetMapping("/item/{code}")
-    public String findOneItem(@PathVariable String code, Model model) {
-        model.addAttribute("item", itemService.findByCode(code));
+    public String findOneItem(@PathVariable String code, Model model, Principal principal) {
+        Item item = itemService.findByCode(code);
+        model.addAttribute("item", item);
+        model.addAttribute("isInFavorites", itemService.isInFavorite(principal.getName(), item));
         return "item/item";
     }
 
@@ -73,9 +76,10 @@ public class ItemController {
         User currentUser = userService.findByUsername(principal.getName());
         userService.removeFromFavorites(currentUser, item);
 
+        if (calledFrom.equals("home")) return "redirect:/";
         if (calledFrom.equals("item")) return "redirect:/catalog/item/%s".formatted(code);
         if (calledFrom.equals("profile")) return "redirect:/users/%s".formatted(principal.getName());
-        return null;
+        return "redirect:/catalog/%s".formatted(item.getItemType().name().concat("s").toLowerCase());
     }
 
     private void findAll(Model model, ItemType itemType, String[] categories, String title) {

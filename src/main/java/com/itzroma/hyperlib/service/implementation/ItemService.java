@@ -19,6 +19,7 @@ import java.util.List;
 public class ItemService implements CommonServiceContract<Item> {
     private final ItemRepository itemRepository;
     private final CategoryService categoryService;
+    private final UserService userService;
 
     @Override
     public List<Item> findAll() {
@@ -80,5 +81,13 @@ public class ItemService implements CommonServiceContract<Item> {
 
     public boolean checkIfCodeIsAvailable(String code) {
         return itemRepository.findByCode(code).isEmpty();
+    }
+
+    public boolean isInFavorite(String username, Item item) {
+        try {
+            return userService.findByUsername(username).getFavorites().contains(item);
+        } catch (NotFoundException ex) {
+            return false;
+        }
     }
 }

@@ -19,6 +19,7 @@ public class HomeController {
         model.addAttribute("books", itemService.findLastAddedItems(AMOUNT_OF_ITEMS_FOR_HOME_PAGE, ItemType.BOOK));
         model.addAttribute("movies", itemService.findLastAddedItems(AMOUNT_OF_ITEMS_FOR_HOME_PAGE, ItemType.MOVIE));
         model.addAttribute("songs", itemService.findLastAddedItems(AMOUNT_OF_ITEMS_FOR_HOME_PAGE, ItemType.SONG));
+        model.addAttribute("itemService", itemService);
         return "home";
     }
 }

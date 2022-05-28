@@ -34,7 +34,14 @@
                                 <small th:text="${book.getAddingDate()}"></small>
                             </p>
                             <form th:action="@{'/catalog/item/' + ${book.getCode()}  + '/addToFavorites'}"
-                                  method="post">
+                                  method="post" th:if="${!itemService.isInFavorite(#authentication.getName(), book)}">
+                                <input type="hidden" name="calledFrom" value="home">
+                                <button class="action-button" type="submit">
+                                    <img th:src="@{/img/common/notFavorite.png}">
+                                </button>
+                            </form>
+                            <form th:action="@{'/catalog/item/' + ${book.getCode()}  + '/removeFromFavorites'}"
+                                  method="post" th:if="${itemService.isInFavorite(#authentication.getName(), book)}">
                                 <input type="hidden" name="calledFrom" value="home">
                                 <button class="action-button" type="submit">
                                     <img th:src="@{/img/common/favorite.png}">
@@ -70,7 +77,14 @@
                                 <small th:text="${movie.getAddingDate()}"></small>
                             </p>
                             <form th:action="@{'/catalog/item/' + ${movie.getCode()}  + '/addToFavorites'}"
-                                  method="post">
+                                  method="post" th:if="${!itemService.isInFavorite(#authentication.getName(), movie)}">
+                                <input type="hidden" name="calledFrom" value="home">
+                                <button class="action-button" type="submit">
+                                    <img th:src="@{/img/common/notFavorite.png}">
+                                </button>
+                            </form>
+                            <form th:action="@{'/catalog/item/' + ${movie.getCode()}  + '/removeFromFavorites'}"
+                                  method="post" th:if="${itemService.isInFavorite(#authentication.getName(), movie)}">
                                 <input type="hidden" name="calledFrom" value="home">
                                 <button class="action-button" type="submit">
                                     <img th:src="@{/img/common/favorite.png}">
@@ -106,7 +120,14 @@
                                 <small th:text="${song.getAddingDate()}"></small>
                             </p>
                             <form th:action="@{'/catalog/item/' + ${song.getCode()}  + '/addToFavorites'}"
-                                  method="post">
+                                  method="post" th:if="${!itemService.isInFavorite(#authentication.getName(), song)}">
+                                <input type="hidden" name="calledFrom" value="home">
+                                <button class="action-button" type="submit">
+                                    <img th:src="@{/img/common/notFavorite.png}">
+                                </button>
+                            </form>
+                            <form th:action="@{'/catalog/item/' + ${song.getCode()}  + '/removeFromFavorites'}"
+                                  method="post" th:if="${itemService.isInFavorite(#authentication.getName(), song)}">
                                 <input type="hidden" name="calledFrom" value="home">
                                 <button class="action-button" type="submit">
                                     <img th:src="@{/img/common/favorite.png}">

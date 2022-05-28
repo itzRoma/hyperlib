@@ -27,14 +27,14 @@
                             </p>
                             <div class="d-flex align-items-center">
                                 <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/addToFavorites'}"
-                                      method="post" class="me-1">
-                                    <input type="hidden" name="calledFrom" value="directly">
+                                      method="post" class="me-1" th:if="${!isInFavorites}">
+                                    <input type="hidden" name="calledFrom" value="item">
                                     <button class="btn btn-primary" type="submit">
                                         Add to favorites
                                     </button>
                                 </form>
                                 <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/removeFromFavorites'}"
-                                      method="post">
+                                      method="post" th:if="${isInFavorites}">
                                     <input type="hidden" name="calledFrom" value="item">
                                     <button class="btn btn-outline-primary" type="submit">
                                         Remove from favorites
