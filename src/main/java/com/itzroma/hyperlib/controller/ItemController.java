@@ -44,8 +44,14 @@ public class ItemController {
     @GetMapping("/item/{code}")
     public String findOneItem(@PathVariable String code, Model model, Principal principal) {
         Item item = itemService.findByCode(code);
+
+        boolean isInFavorites = false;
+        if (principal != null) {
+            isInFavorites = itemService.isInFavorite(principal.getName(), item);
+        }
+
         model.addAttribute("item", item);
-        model.addAttribute("isInFavorites", itemService.isInFavorite(principal.getName(), item));
+        model.addAttribute("isInFavorites", isInFavorites);
         return "item/item";
     }
 
