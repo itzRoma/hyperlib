@@ -26,6 +26,9 @@
                                 <small class="text-muted" th:text="${item.getItemType()} + ' : ' + ${item.getCode()}"></small>
                             </p>
                             <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-outline-primary me-1">
+                                    Download
+                                </button>
                                 <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/addToFavorites'}"
                                       method="post" class="me-1" th:if="${!isInFavorites}">
                                     <input type="hidden" name="calledFrom" value="item">
@@ -51,7 +54,7 @@
                                 <small class="text-muted" th:text="'Categories: ' + ${item.getCategories()}"></small>
                             </p>
                             <p class="card-text">
-                                <small class="text-muted">Description</small>
+                                <small class="text-muted">Description</small><br>
                                 <span th:text="${item.getDescription()}"></span>
                             </p>
                         </div>

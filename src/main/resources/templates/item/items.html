@@ -55,20 +55,25 @@
                                 <p class="card-text text-muted mb-0">Added at:<br>
                                     <small th:text="${item.getAddingDate()}"></small>
                                 </p>
-                                <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/addToFavorites'}"
-                                      method="post" th:if="${!itemService.isInFavorite(#authentication.getName(), item)}">
-                                    <input type="hidden" name="calledFrom" value="catalog">
-                                    <button class="action-button" type="submit">
-                                        <img th:src="@{/img/common/notFavorite.png}">
+                                <div class="d-flex align-items-center">
+                                    <button type="button" class="action-button me-1">
+                                        <img th:src="@{/img/common/download.png}" alt="download">
                                     </button>
-                                </form>
-                                <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/removeFromFavorites'}"
-                                      method="post" th:if="${itemService.isInFavorite(#authentication.getName(), item)}">
-                                    <input type="hidden" name="calledFrom" value="catalog">
-                                    <button class="action-button" type="submit">
-                                        <img th:src="@{/img/common/favorite.png}">
-                                    </button>
-                                </form>
+                                    <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/addToFavorites'}"
+                                          method="post" th:if="${!itemService.isInFavorite(#authentication.getName(), item)}">
+                                        <input type="hidden" name="calledFrom" value="catalog">
+                                        <button class="action-button" type="submit">
+                                            <img th:src="@{/img/common/notFavorite.png}">
+                                        </button>
+                                    </form>
+                                    <form th:action="@{'/catalog/item/' + ${item.getCode()}  + '/removeFromFavorites'}"
+                                          method="post" th:if="${itemService.isInFavorite(#authentication.getName(), item)}">
+                                        <input type="hidden" name="calledFrom" value="catalog">
+                                        <button class="action-button" type="submit">
+                                            <img th:src="@{/img/common/favorite.png}">
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

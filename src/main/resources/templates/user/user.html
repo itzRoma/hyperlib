@@ -37,13 +37,18 @@
                                      th:each="favorite : ${user.getFavorites()}">
                                     <a th:href="@{'/catalog/item/' + ${favorite.getCode()}}"
                                        th:text="${favorite.getItemType()} + ' : ' + ${favorite.getTitle()}"></a>
-                                    <form th:action="@{'/catalog/item/' + ${favorite.getCode()}  + '/removeFromFavorites'}"
-                                          method="post" th:if="${user.getUsername().equals(#authentication.getName())}">
-                                        <input type="hidden" name="calledFrom" value="profile">
-                                        <button class="action-button" type="submit">
-                                            <img th:src="@{'/img/common/false.png'}" alt="X">
+                                    <div class="d-flex align-items-center" th:if="${user.getUsername().equals(#authentication.getName())}">
+                                        <button type="button" class="action-button me-1">
+                                            <img th:src="@{/img/common/download.png}" alt="download">
                                         </button>
-                                    </form>
+                                        <form th:action="@{'/catalog/item/' + ${favorite.getCode()}  + '/removeFromFavorites'}"
+                                              method="post">
+                                            <input type="hidden" name="calledFrom" value="profile">
+                                            <button class="action-button" type="submit">
+                                                <img th:src="@{'/img/common/false.png'}" alt="X">
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
